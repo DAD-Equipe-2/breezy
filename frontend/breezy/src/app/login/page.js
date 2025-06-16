@@ -2,6 +2,7 @@
 
 import Input from "@/components/input";
 import Button from "@/components/button";
+import { redirect } from "next/navigation";
 
 export default function Login() {
   return (
@@ -10,17 +11,17 @@ export default function Login() {
         src="breezy_logo_dark.jpg"
         className="w-18 h-31 object-cover"
       />
-        <div className="flex flex-col text-3xl text-bold fond-Roboto justify-center items-center w-full max-w-md mx-auto mt-2">
+        <div className="flex flex-col text-3xl font-bold font-Roboto justify-center items-center w-full max-w-md mx-auto mt-2">
             <p className="ml-2 mb-4">
                 Login to Breesy
             </p>
-            <div className="flex justify-center my-2 w-full">
+            <div className="flex justify-center text-base font-bold font-Roboto my-2 w-full">
                 <Input Nickname="Nickname" />
             </div>
-            <div className="flex justify-center my-2 w-full">
+            <div className="flex justify-center text-base font-bold font-Roboto my-2 w-full">
                 <Input Nickname="Password" />
             </div>
-            <div className="flex justify-center items-center w-full max-w-md ">
+            <div className="flex justify-center items-center text-sm font-thin font-roboto w-full max-w-md ">
                 <p className="text-quaternary text-sm ml-2">Wrong nickname or password</p>
             </div>
             <div className="flex justify-center items-center my-2 w-full ">
@@ -45,7 +46,7 @@ export default function Login() {
                     textFondSize="text-xl"
                     bordercolor="border-secondary"
                     color="bg-background"
-                    action={() => console.log("Login clicked")}
+                    action={() => redirect("/register")}
                 />
             </div>
         </div>
