@@ -79,10 +79,34 @@ services:
     networks:
       - app-network
 
+  post-service:
+    build:
+      context: ./backend/post
+      dockerfile: Dockerfile.dev
+    container_name: breezy-post-service
+    environment:
+      - DB_CONNECTION=mongodb://post-mongo:27017/post
+    volumes:
+      - ./backend/post:/app
+      # - /app/node_modules
+    networks:
+      - app-network
+    depends_on:
+      - post-mongo
+
+  post-mongo:
+    image: mongo:latest
+    container_name: breezy-post-mongo
+    volumes:
+      - post-mongo-data:/data/db
+    networks:
+      - app-network
+
 volumes:
   auth-mongo-data:
   user-mongo-data:
   profile-mongo-data:
+  post-mongo-data:
 
 networks:
   app-network:
