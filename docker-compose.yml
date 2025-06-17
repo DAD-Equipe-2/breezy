@@ -36,7 +36,7 @@ services:
   user-service:
     build:
       context: ./backend/user
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     container_name: breezy-user-service
     environment:
       - DB_CONNECTION=mongodb://user-mongo:27017/user
