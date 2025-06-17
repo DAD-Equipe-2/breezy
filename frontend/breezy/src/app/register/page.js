@@ -19,19 +19,19 @@ export default function Login() {
                 <p className="text-quaternary text-sm font-thin font-roboto ml-5">Nickname unavailable</p>
             </div>
             <div className="flex justify-center text-base font-bold font-roboto my-3 w-full">
-                <Input Nickname="Nickname" />
+                <Input Hint="Nickname" Type="Text" />
             </div>
             <div className="flex justify-center text-base font-bold font-roboto my-3 w-full">
-                <Input Nickname="Username" />
+                <Input Hint="Username" Type="Text" />
             </div>
             <div className="flex justify-center text-base font-bold font-roboto my-3 w-full">
-                <Input Nickname="Password" />
+                <Input Hint="Password" Type="Password" />
             </div>
             <div className="flex w-full max-w-md h-3">
                 <p className="text-quaternary text-sm font-thin font-roboto ml-5">Passwords must match</p>
             </div>
             <div className="flex justify-center my-2 w-full">
-                <Input Nickname="Verify Password" />
+                <Input Hint="Verify Password" Type="Password" />
             </div>
             <div className="flex justify-center items-center my-2 w-full h-14 ">
                 <Button

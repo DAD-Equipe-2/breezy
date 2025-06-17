@@ -16,10 +16,10 @@ export default function Login() {
                 Login to Breesy
             </p>
             <div className="flex justify-center text-base font-bold font-Roboto my-2 w-full">
-                <Input Nickname="Nickname" />
+                <Input Hint="Nickname" Type="Text" />
             </div>
             <div className="flex justify-center text-base font-bold font-Roboto my-2 w-full">
-                <Input Nickname="Password" />
+                <Input Hint="Password" Type="Password" />
             </div>
             <div className="flex justify-center items-center text-sm font-thin font-roboto w-full max-w-md ">
                 <p className="text-quaternary text-sm ml-2">Wrong nickname or password</p>
