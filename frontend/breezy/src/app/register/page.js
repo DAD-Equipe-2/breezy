@@ -12,7 +12,7 @@ export default function Login() {
         className="w-18 h-31 object-cover"
       />
         <div className="flex flex-col text-3xl text-bold font-Roboto justify-center items-center w-full max-w-md mx-auto mt-2">
-            <p className="ml-2 mb-4">
+            <p className="mb-4">
                 Create your account
             </p>
             <div className="flex w-full max-w-md h-3 ">
