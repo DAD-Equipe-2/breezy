@@ -20,6 +20,10 @@ mongoose.connect(process.env.DB_CONNECTION, {
     .catch(err => console.error(err));
 
 // Routes
+app.get('/', (req, res) => {
+    res.send('Hello World !')
+});
+
 app.use('/api/v1/user', require('./routes/userRoutes'));
 
 const PORT = process.env.PORT || 3000;
