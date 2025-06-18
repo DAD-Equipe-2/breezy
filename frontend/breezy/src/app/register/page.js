@@ -33,11 +33,12 @@ export default function Login() {
             <div className="flex justify-center my-2 w-full">
                 <Input Hint="Verify Password" Type="Password" />
             </div>
-            <div className="flex justify-center items-center my-2 w-full h-14 ">
+            <div className="my-2">
                 <Button
                     text="Register"
                     textcolor="text-foreground"
                     textFondSize="text-xl"
+                    paddingX="px-30"
                     bordercolor="border-secondary"
                     color="bg-background"
                     action={() => console.log("Login clicked")}

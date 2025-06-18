@@ -24,11 +24,12 @@ export default function Login() {
             <div className="flex justify-center items-center text-sm font-thin font-roboto w-full max-w-md ">
                 <p className="text-quaternary text-sm ml-2">Wrong nickname or password</p>
             </div>
-            <div className="flex justify-center items-center my-2 w-full ">
+            <div className=" my-2 ">
                 <Button
                     text="Login"
                     textcolor="text-background"
                     textFondSize="text-xl"
+                    paddingX="px-30"
                     bordercolor="border-secondary"
                     color="bg-primary"
                     action={() => console.log("Login clicked")}
@@ -39,11 +40,12 @@ export default function Login() {
                 <p className="mx-4 text-foreground text-xl">OR</p>
                 <div className="flex-grow border-t border-gray-300"></div>
             </div>
-            <div className="flex justify-center items-center my-2 w-full ">
+            <div className="my-2">
                 <Button
                     text="Register"
                     textcolor="text-foreground"
                     textFondSize="text-xl"
+                    paddingX="px-30"
                     bordercolor="border-secondary"
                     color="bg-background"
                     action={() => redirect("/register")}
