@@ -11,9 +11,20 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        enum: ['user', 'moderator', 'admin'],
+        default: 'user',
+    },
     refresh_token: {
         type: String,
         default: null,
+    }
+});
+
+userSchema.pre('save', async function () {
+    if (this.isModified('password')) {
+        this.password = await bcrypt.hash(this.password, 10);
     }
 });
 
