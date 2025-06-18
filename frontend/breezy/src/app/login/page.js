@@ -6,11 +6,11 @@ import { redirect } from "next/navigation";
 
 export default function Login() {
   return (
-    <div className="flex flex-col justify-center items-center w-16 h-16 mt-80 my-2  w-full">
-      <img
-        src="breezy_logo_dark.jpg"
+    <div className="flex flex-col justify-center items-center my-2 w-full">
+    <img
+        src="/breezy_logo_dark.jpg"
         className="w-18 h-31 object-cover"
-      />
+    />
         <div className="flex flex-col text-3xl font-bold font-Roboto justify-center items-center w-full max-w-md mx-auto mt-2">
             <p className="ml-2 mb-4">
                 Login to Breesy

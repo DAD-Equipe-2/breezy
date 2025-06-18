@@ -13,7 +13,7 @@ export default function Footer() {
             <FaSearch/>
         </Link>
         <Link href="/notifications" className="text-xl sm:text-2xl md:text-3xl lg:text-4xl transition-transform duration-200 hover:scale-110">
-            <IoMdNotifications/>
+            <IoMdNotifications fill="none" strokeWidth={40}/>
         </Link>
         <Link href="/messages" className="text-xl sm:text-2xl md:text-3xl lg:text-4xl transition-transform duration-200 hover:scale-110">
             <MdMailOutline/>

@@ -6,9 +6,9 @@ import Link from 'next/link';
 
 export default function Login() {
   return (
-    <div className="flex flex-col justify-center items-center w-16 h-16 mt-90 my-2  w-full">
+    <div className="flex flex-col justify-center items-center my-2 w-full">
       <img
-        src="breezy_logo_dark.jpg"
+        src="/breezy_logo_dark.jpg"
         className="w-18 h-31 object-cover"
       />
         <div className="flex flex-col text-3xl text-bold font-Roboto justify-center items-center w-full max-w-md mx-auto mt-2">
