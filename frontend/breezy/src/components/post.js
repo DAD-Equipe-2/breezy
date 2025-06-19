@@ -21,7 +21,7 @@ export default function Post({ postId }) {
   });
 
   return (
-    <div className="flex post bg-foreground-500 text-primary p-4 rounded-lg border border-foreground shadow-md mb-4">
+    <div className="flex post bg-foreground-500 text-primary p-4 rounded-lg border border-foreground shadow-md mb-2">
       <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden">
         <img
           src={post.user.profilePicture}
