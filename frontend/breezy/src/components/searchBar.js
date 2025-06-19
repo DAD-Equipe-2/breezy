@@ -1,6 +1,6 @@
-export default function SearchBar({ value, onChange, placeholder = "Rechercher...", onIconClick }) {
+export default function SearchBar({ value, onChange, placeholder = "Rechercher...", onIconClick, width = "w-[90]", rounded = true}) {
   return (
-    <div className="flex items-center border bg-quinary rounded-md px-1 py-1 w-[90%] max-w-md">
+    <div className={`flex items-center border bg-quinary ${rounded ? "rounded-md" : ""} px-1 py-1 ${width} `}>
       {/* Icône loupe SVG cliquable */}
       <button
         type="button"

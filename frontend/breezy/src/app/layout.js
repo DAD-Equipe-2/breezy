@@ -24,7 +24,6 @@ export default function RootLayout({ children }) {
         <main className="flex-grow flex flex-col items-center justify-center">
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );

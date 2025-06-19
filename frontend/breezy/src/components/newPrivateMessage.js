@@ -3,7 +3,7 @@
 export default function NewPrivateMessage({ ProfilPicture, Username, Pseudo, onClick }) {
   return (
     <button onClick={onClick} className="w-full text-left cursor-pointer">
-      <div className="group flex items-start w-full bg-foreground-300 text-primary p-4 rounded-lg mb-4 
+      <div className="group flex items-start w-full bg-foreground-300 text-primary p-4 rounded-lg 
                       border-y border-gray-500 transition duration-200 ease-in-out 
                       hover:shadow-md hover:shadow-blue-300/50">
         

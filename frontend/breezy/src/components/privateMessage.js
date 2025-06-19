@@ -1,14 +1,13 @@
 "use client";
 
-export default function PrivateMessage({ ProfilPicture, Username, Pseudo, onClick }) {
+export default function PrivateMessage({ ProfilPicture, Username, Pseudo, Date, LastMessage, onClick }) {
   return (
     <button
       onClick={onClick}
       className="group w-full text-left"
     >
-      <div className="flex items-start w-full p-4 mb-4 border-y border-gray-500 bg-foreground-300 
-                      rounded-lg transition duration-200 ease-in-out
-                      hover:scale-[1.01]">
+      <div className="flex items-start w-full p-4  border-y border-gray-500 bg-foreground-300 
+                      rounded-lg transition duration-200 ease-in-out cursor-pointer">
         <div className="shrink-0 w-10 h-10 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden">
           <img
             src={ProfilPicture}
@@ -32,7 +31,7 @@ export default function PrivateMessage({ ProfilPicture, Username, Pseudo, onClic
             </div>
 
             <h4 className="text-secondary text-xs sm:text-sm md:text-base font-regular font-roboto mt-[1px]">
-              12:34 PM
+              {Date}
             </h4>
           </div>
 
@@ -40,7 +39,7 @@ export default function PrivateMessage({ ProfilPicture, Username, Pseudo, onClic
           <div className="flex flex-col">
             <p className="text-secondary text-sm sm:text-sm md:text-base font-regular font-roboto 
                            transition duration-200">
-              Lorem ipsum dolor sit amet zeazezaeaz.
+              {LastMessage}
             </p>
           </div>
         </div>
