@@ -2,7 +2,6 @@ services:
   
   gateway:
     image: nginx:alpine
-    restart: always
     container_name: breezy-api-gateway
     ports:
       - "8080:8080"
@@ -16,11 +15,13 @@ services:
   auth-service:
     build:
       context: ./backend/auth
-      dockerfile: Dockerfile
-    restart: always
+      dockerfile: Dockerfile.dev    # Use Dockerfile.dev for development, Dockerfile for production
     container_name: breezy-auth-service
     environment:
       - MONGO_URI=mongodb://auth-mongo:27017/auth
+    volumes:
+      - ./backend/auth:/app         # Mount local source czode into container (remove for production)
+      - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
     networks:
       - app-network
     depends_on:
@@ -28,40 +29,12 @@ services:
 
   auth-mongo:
     image: mongo:latest
-    restart: always
     container_name: breezy-auth-mongo
     volumes:
       - auth-mongo-data:/data/db
-    networks:
-      - app-network
-
-  user-service:
-    build:
-      context: ./backend/user
-      dockerfile: Dockerfile.dev
-    container_name: breezy-user-service
-    environment:
-      - DB_CONNECTION=mongodb://user-mongo:27017/user
-    volumes:
-      - ./backend/user:/app
-      - /app/node_modules
-    networks:
-      - app-network
-    depends_on:
-      - user-mongo
-
-  user-mongo:
-    image: mongo:latest
-    container_name: breezy-user-mongo
-    volumes:
-      - user-mongo-data:/data/db
-    networks:
-      - app-network
-
 
 volumes:
   auth-mongo-data:
-  user-mongo-data:
 
 networks:
   app-network:

@@ -1,0 +1,57 @@
+"use client";
+
+import Input from "@/components/input";
+import Button from "@/components/button";
+import { redirect } from "next/navigation";
+
+export default function Login() {
+  return (
+    <div className="flex flex-col justify-center items-center my-2 w-full">
+    <img
+        src="/breezy_logo_dark.jpg"
+        className="w-18 h-31 object-cover"
+    />
+        <div className="flex flex-col text-3xl font-bold font-Roboto justify-center items-center w-full max-w-md mx-auto mt-2">
+            <p className="ml-2 mb-4">
+                Login to Breesy
+            </p>
+            <div className="flex justify-center text-base font-bold font-Roboto my-2 w-full">
+                <Input Hint="Nickname" Type="Text" />
+            </div>
+            <div className="flex justify-center text-base font-bold font-Roboto my-2 w-full">
+                <Input Hint="Password" Type="Password" />
+            </div>
+            <div className="flex justify-center items-center text-sm font-thin font-roboto w-full max-w-md ">
+                <p className="text-quaternary text-sm ml-2">Wrong nickname or password</p>
+            </div>
+            <div className=" my-2 ">
+                <Button
+                    text="Login"
+                    textcolor="text-background"
+                    textFondSize="text-xl"
+                    paddingX="px-30"
+                    bordercolor="border-secondary"
+                    color="bg-primary"
+                    action={() => console.log("Login clicked")}
+                />
+            </div>
+            <div className="flex items-center w-full max-w-md my-2">
+                <div className="flex-grow border-t border-gray-300"></div>
+                <p className="mx-4 text-foreground text-xl">OR</p>
+                <div className="flex-grow border-t border-gray-300"></div>
+            </div>
+            <div className="my-2">
+                <Button
+                    text="Register"
+                    textcolor="text-foreground"
+                    textFondSize="text-xl"
+                    paddingX="px-30"
+                    bordercolor="border-secondary"
+                    color="bg-background"
+                    action={() => redirect("/register")}
+                />
+            </div>
+        </div>
+    </div>
+  );
+}
