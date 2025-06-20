@@ -12,10 +12,6 @@ app.use(cors());
 
 
 // Routes
-app.get('/', (req, res) => {
-    res.send('Hello World !')
-});
-
 require('./routes/auth.route')(app);
 
 
