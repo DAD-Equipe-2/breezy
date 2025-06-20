@@ -1,7 +1,7 @@
 require('dotenv').config();
-const { connectDB } = require('../utils/db');
-const User          = require('../models/User');
-const readline      = require('readline');
+const mongoose = require('./utils/db');
+const User     = require('../models/user.model');
+const readline = require('readline');
 
 
 try {

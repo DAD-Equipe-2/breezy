@@ -1,5 +1,5 @@
 
-module.exports = function requireBodyParams(...requiredParams) {
+function requireBodyParams(...requiredParams) {
     return (req, res, next) => {
         const missing = requiredParams.filter(param => !(param in req.body));
 
@@ -12,3 +12,5 @@ module.exports = function requireBodyParams(...requiredParams) {
         next();
     };
 };
+
+module.exports = { requireBodyParams };
