@@ -1,8 +1,7 @@
 const jwt    = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-
-const User = require('../models/user.model');
+const User   = require('../models/user.model');
 
 
 exports.register = async (req, res) => {
@@ -11,11 +10,7 @@ exports.register = async (req, res) => {
     try {
         // Check if the user already exists
         const existingUser = await User.findOne({ username: username });
-        if (existingUser) {
-            return res.status(400).json({
-                message: 'Username already exists'
-            });
-        }
+        if (existingUser) return res.status(400).json({ message: 'Username already exists' });
 
         // Check if the username is valid
         const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;     // At least 3 characters, alphanumeric and underscores
@@ -65,20 +60,33 @@ exports.login = async (req, res) => {
         };
         
         // Sign the JWT token with the secret key and set an expiration time
-        const accessToken = jwt.sign(payload, process.env.ACCESS_JWT_KEY, { expiresIn: '1h' });
+        const accessToken  = jwt.sign(payload, process.env.ACCESS_JWT_KEY,  { expiresIn: '1h' });
+        const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_KEY, { expiresIn: '7d' });
 
-        const expiresIn = Math.floor(Date.now() / 1000) + (1 * 60 * 60); // 1 hour
+        const oneHourMs      = 60 * 60 * 1000;              // 1 hour in ms
+        const sevenDaysMs    = 7 * 24 * 60 * 60 * 1000;     // 7 days in ms
+
+        // Save the refresh token in the database (optional, for revocation purposes)
+        user.refresh_token = refreshToken;
+        await user.save();
 
         // Set the token in a cookie with httpOnly and secure flags
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: true,
-            maxAge: expiresIn * 1000,   // Convert seconds to milliseconds 
+            maxAge: oneHourMs,
+        });
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            maxAge: sevenDaysMs,
         });
 
         return res.status(200).json({
             message: 'Login successful',
-            accessToken_expiresIn: expiresIn,
+            accessToken_expiresIn: oneHourMs,
+            refreshToken_expiresIn: sevenDaysMs,
         });
     }
     catch (error) {
@@ -92,7 +100,35 @@ exports.verify = async (req, res) => {
 }
 
 
-// Renew the token
+exports.renewToken = async (req, res) => {
+    try {
+        // Check if the refresh token matches
+        const user = await User.findOne({ username: req.user.username });
+        if (!user || user.refresh_token !== req.token) return res.status(403).json({ message: 'Invalid or expired refresh token' });
+        
+        // Create a new JWT token payload
+        const payload = {
+            username: req.user.username,
+            role: req.user.role
+        };
+        
+        // Sign a new access token with the secret key
+        const newAccessToken = jwt.sign(payload, process.env.ACCESS_JWT_KEY, { expiresIn: '1h' });
+        const oneHourMs      = 60 * 60 * 1000;      // 1 hour in milliseconds
 
+        // Set the new token in a cookie with httpOnly and secure flags
+        res.cookie('accessToken', newAccessToken, {
+            httpOnly: true,
+            secure: true,
+            maxAge: oneHourMs,
+        });
 
-// Delete a user
+        return res.status(200).json({
+            message: 'Access token renewed',
+            accessToken_expiresIn: oneHourMs
+        });
+    }
+    catch (error) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
