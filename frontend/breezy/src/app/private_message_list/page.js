@@ -7,14 +7,17 @@ import Button from "@/components/button";
 import SearchBar from "@/components/searchBar";
 import Footer from "@/components/footer";
 import { TbMailPlus } from "react-icons/tb";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function NewMessage() {
+    const router = useRouter();
   return (
     <div className="flex flex-col bg-background text-foreground py-4 w-full pb-22 ">
       {/* Header */}
         <div className="flex items-center justify-start mb-3 px-4 gap-4">
             <Return />
-            <h1 className="absolute left-1/2 transform -translate-x-1/2 text-base font-bold font-roboto">Messages</h1>
+            <h1 className="absolute left-1/2 transform -translate-x-1/2 text-base sm:text-xl md:text-2xl font-bold font-roboto">Messages</h1>
         </div>
         <div className="flex flex-col items-center justify-center w-full">
           <SearchBar placeholder="Search for people" width = "w-full"  rounded = {false}/>
@@ -127,7 +130,7 @@ export default function NewMessage() {
         </div>
         <div className="flex fixed bottom-25 right-4 z-50">
             <Button
-                action={() => console.log("New Message")}
+                action={() => router.push("/newMessage")}
                 text="New Message"
                 textcolor="text-white"
                 bordercolor="border-white"

@@ -1,15 +1,17 @@
 import Button from "@/components/button";
 import Post from "@/components/post";
 import BackButton from "@/components/return";
-import { FaCalendar } from "react-icons/fa";
+import { FaCalendar, FaSearch } from "react-icons/fa";
 import Footer from "@/components/footer";
+import { GiFeather } from "react-icons/gi";
+import Link from "next/link";
 
 export default async function UserProfile({ params }) {
   const { username } = await params;
   const isMyProfile = false; // TODO : call the API to check if the profile belongs to the logged-in user
 
   return (
-    <div className="pb-15">
+    <div className="pb-20">
       <div className="flex h-[15vh] items-center bg-[#1F1F1F] p-4">
         <BackButton/>
       </div>
@@ -45,6 +47,19 @@ export default async function UserProfile({ params }) {
           <Post></Post>
           <Post></Post>
         </div>
+      <div className="flex fixed bottom-25 right-4 z-50">
+        <Link href="/post/new">
+          <Button
+              textcolor="text-white"
+              bordercolor="border-white"
+              textFondSize="text-sm"
+              paddingX="px-2"
+              color="bg-primary"
+              icon={<GiFeather className="w-6 h-6" /> }
+              className="bg-primary text-white p-3 rounded-full shadow-lg hover:bg-primary/90 transition"
+          />
+        </Link>
+      </div>  
       <div className="flex flex-col fixed bottom-0 inset-x-0 z-20 bg-background w-full">
           <Footer />
       </div>  
