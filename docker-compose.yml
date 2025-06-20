@@ -58,10 +58,33 @@ services:
     networks:
       - app-network
 
+  profile-service:
+    build:
+      context: ./backend/profile
+      dockerfile: Dockerfile.dev
+    container_name: breezy-profile-service
+    environment:
+      - DB_CONNECTION=mongodb://profile-mongo:27017/profile
+    volumes:
+      - ./backend/profile:/app
+      # - /app/node_modules            # commenter pour éviter d’écraser node_modules
+    networks:
+      - app-network
+    depends_on:
+      - profile-mongo
+
+  profile-mongo:
+    image: mongo:latest
+    container_name: breezy-profile-mongo
+    volumes:
+      - profile-mongo-data:/data/db
+    networks:
+      - app-network
 
 volumes:
   auth-mongo-data:
   user-mongo-data:
+  profile-mongo-data:
 
 networks:
   app-network:
