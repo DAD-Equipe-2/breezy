@@ -104,11 +104,35 @@ services:
     networks:
       - app-network
 
+
+  message-service:
+    build:
+      context: ./backend/message
+      dockerfile: Dockerfile.dev
+    container_name: breezy-message-service
+    environment:
+      - DB_CONNECTION=mongodb://message-mongo:27017/message
+    volumes:
+      - ./backend/message:/app
+    networks:
+      - app-network
+    depends_on:
+      - message-mongo
+
+  message-mongo:
+    image: mongo:latest
+    container_name: breezy-message-mongo
+    volumes:
+      - message-mongo-data:/data/db
+    networks:
+      - app-network
+
 volumes:
   auth-mongo-data:
   user-mongo-data:
   profile-mongo-data:
   post-mongo-data:
+  message-mongo-data:
 
 networks:
   app-network:
