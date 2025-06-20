@@ -35,8 +35,33 @@ services:
     networks:
       - app-network
 
+  user-service:
+    build:
+      context: ./backend/user
+      dockerfile: Dockerfile.dev
+    container_name: breezy-user-service
+    environment:
+      - DB_CONNECTION=mongodb://user-mongo:27017/user
+    volumes:
+      - ./backend/user:/app
+      - /app/node_modules
+    networks:
+      - app-network
+    depends_on:
+      - user-mongo
+
+  user-mongo:
+    image: mongo:latest
+    container_name: breezy-user-mongo
+    volumes:
+      - user-mongo-data:/data/db
+    networks:
+      - app-network
+
+
 volumes:
   auth-mongo-data:
+  user-mongo-data:
 
 networks:
   app-network:
