@@ -1,4 +1,5 @@
 export default async function loginUser(username, password) {
+  // Appel POST à l'API pour se connecter
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
     {
@@ -9,12 +10,11 @@ export default async function loginUser(username, password) {
     }
   );
 
+  // Vérification de la réponse
   if (!res.ok) {
     const err = await res.text();
     throw new Error(err || 'Échec de la requête');
   }
-
   // Le cookie est automatiquement enregistré par le navigateur.
-  // Si tu veux juste savoir que tout est OK, tu peux retourner la réponse ou un drapeau :
   return true;
 }
