@@ -4,7 +4,7 @@ import Input from "@/components/input";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import loginUser from "@/utils/auth";
+import { loginUser } from "@/utils/auth";
 
 export default function Login() {
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function Login() {
   const handleLogin = async () => {
     setError("");
     if (!username || !password) {
-      setError("Veuillez remplir tous les champs.");
+      setError("Please complete all fields.");
       return;
     }
     setLoading(true);
@@ -26,7 +26,7 @@ export default function Login() {
       router.push("/home");
     } catch (err) {
       console.error(err);
-      setError("Identifiants invalides.");
+      setError("Invalid identifiers.");
     } finally {
       setLoading(false);
     }
@@ -44,7 +44,7 @@ export default function Login() {
 
         <div className="w-full my-2">
           <Input
-            Hint="Nickname"
+            Hint="Username"
             Type="Text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
