@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
         }
 
         // Check if the password is valid
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;     // At least 6 characters, one uppercase, one lowercase, one number
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;     // At least 6 characters, one uppercase, one lowercase, one number
         if (!passwordRegex.test(password)) {
             return res.status(400).json({
                 message: 'Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one number'
