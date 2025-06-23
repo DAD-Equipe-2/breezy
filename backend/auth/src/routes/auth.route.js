@@ -88,7 +88,7 @@ router.post('/login', requireBodyParams('username', 'password'), authController.
  *       401:
  *         description: Unauthorized
 */
-router.get('/verify', authenticateJWT(process.env.ACCESS_JWT_KEY), authController.verify);
+router.get('/verify', authenticateJWT(process.env.ACCESS_JWT_KEY, 'access'), authController.verify);
 
 
 /**
@@ -105,7 +105,7 @@ router.get('/verify', authenticateJWT(process.env.ACCESS_JWT_KEY), authControlle
  *       401:
  *         description: Unauthorized
 */
-router.post('/renew', authenticateJWT(process.env.REFRESH_JWT_KEY), authController.renewToken);
+router.post('/renew', authenticateJWT(process.env.REFRESH_JWT_KEY, 'refresh'), authController.renewToken);
 
 
 /**

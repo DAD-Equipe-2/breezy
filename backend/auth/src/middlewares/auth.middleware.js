@@ -2,19 +2,13 @@ const jwt  = require('jsonwebtoken');
 const User = require('../models/user.model');
 
 
-function authenticateJWT(key) {
+function authenticateJWT(key, type = 'access') {
     return (req, res, next) => {
-        const authHeader = req.headers.authorization;
+        const token = type == 'access' ? req.cookies.accessToken : req.cookies.refreshToken;
 
         try {
-            // Check if the Authorization header is present
-            if (!authHeader) return res.status(401).json({ message: 'No token provided' });
-
-            // Check if the token starts with 'Bearer '
-            if (!authHeader.startsWith('Bearer ')) return res.status(401).json({ message: 'Invalid token format' });
-
-            // Extract the token from the Authorization header
-            const token = authHeader.split(' ')[1];
+            // Check if the token is present
+            if (!token) return res.status(401).json({ message: 'No token provided' });
 
             // Verify the token using the secret key
             jwt.verify(token, key, async (err, decoded) => {
