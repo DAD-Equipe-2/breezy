@@ -6,7 +6,7 @@ const swaggerDefinition = {
     info: {
         title: 'Auth Service API',
         version: '1.0.0',
-        description: 'Authentication microservice API',
+        description: 'Authentication service',
     },
     servers: [
         {
