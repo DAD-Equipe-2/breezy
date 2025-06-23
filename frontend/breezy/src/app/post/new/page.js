@@ -9,7 +9,7 @@ export default function TweetingPage() {
   const fileInputRef = useRef(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [tweet, setTweet] = useState("");
-  const maxCharacters = 140;
+  const maxCharacters = 280;
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
