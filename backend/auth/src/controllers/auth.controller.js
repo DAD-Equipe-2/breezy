@@ -96,6 +96,10 @@ exports.login = async (req, res) => {
 
 
 exports.verify = async (req, res) => {
+    // Set headers for internal use
+    req.headers['x-user-name'] = req.user.username;
+    req.headers['x-user-role'] = req.user.role;
+
     return res.status(200).json({ message: 'Token is valid' });
 }
 
