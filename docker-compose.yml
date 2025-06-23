@@ -13,6 +13,15 @@ services:
     depends_on:
       - auth-service
 
+  documentation-service:
+    build:
+      context: ./backend/docs
+      dockerfile: Dockerfile
+    restart: always
+    container_name: breezy-documentation-service
+    networks:
+      - app-network
+
   auth-service:
     build:
       context: ./backend/auth

@@ -11,6 +11,3 @@ const port = 3000;
 app.listen(port, () => {
     console.info(`Server started on port ${port}`);
 });
-
-
-// Add swagger documentation
