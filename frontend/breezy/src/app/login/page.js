@@ -45,6 +45,7 @@ export default function Login() {
       <div className="flex flex-col text-3xl font-bold font-Roboto justify-center items-center w-full max-w-md mx-auto mt-2">
         <p className="ml-2 mb-4">Login to Breesy</p>
 
+        {/* Username input */}
         <div className="flex w-full my-2 items-center justify-center">
           <Input
             Hint="Username"
@@ -54,6 +55,7 @@ export default function Login() {
           />
         </div>
 
+        {/* Password input */}
         <div className="flex items-center justify-center w-full my-2">
           <Input
             Hint="Password"
@@ -70,7 +72,8 @@ export default function Login() {
         )}
         <div className="flex flex-col text-green text-sm font-bold font-Roboto justify-center items-center w-full max-w-md mx-auto mt-2">
         {registered === 'true' && <p>Account created successfully !</p>}
-        {/* Ton formulaire de login ici */}
+        
+        {/* Login submit button */}
         </div>
         <div className="my-4">
           <Button

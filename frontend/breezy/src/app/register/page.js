@@ -76,10 +76,13 @@ export default function Register() {
                 {errorUsername}
             </p>
             )}
+
+            {/* Username input */}
             <div className="flex justify-center text-base font-bold font-roboto my-3 w-full">
                 <Input Hint="Username" Type="Text" value={username} onChange={(e) => setUsername(e.target.value)}/>
             </div>
             
+            {/* Nickname input */}
             <div className="flex justify-center text-base font-bold font-roboto my-3 w-full">
                 <Input Hint="Nickname" Type="Text" value={nickname} onChange={(e) => setNickname(e.target.value)}/>
             </div>
@@ -88,6 +91,8 @@ export default function Register() {
                 {errorPasswordRequirement}
             </p>
             )}
+
+            {/* Password input */}
             <div className="flex justify-center text-base font-bold font-roboto my-3 w-full">
                 <Input Hint="Password" Type="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
             </div>
@@ -96,6 +101,8 @@ export default function Register() {
                 {errorPassword}
             </p>
             )}
+
+            {/* Confirm Password input */}
             <div className="flex justify-center my-2 w-full">
                 <Input Hint="Confirm Password" Type="Password" value={verifPassword} onChange={(e) => setVerifPassword(e.target.value)}/>
             </div>
@@ -104,6 +111,8 @@ export default function Register() {
                 {error}
             </p>
             )}
+
+            {/* Register button */}
             <div className="my-2">
                 <Button
                     text={loading ? "Loading..." : "Register"}
