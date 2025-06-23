@@ -11,11 +11,22 @@ services:
     networks:
       - app-network
     depends_on:
+      - documentation-service
       - auth-service
       - user-service
       - profile-service
       - post-service
       - message-service
+  
+  # -- DOCUMENTATION SERVICE --
+  documentation-service:
+    build:
+      context: ./backend/docs
+      dockerfile: Dockerfile
+    restart: always
+    container_name: breezy-documentation-service
+    networks:
+      - app-network
 
   # -- AUTH SERVICE --
   auth-service:
