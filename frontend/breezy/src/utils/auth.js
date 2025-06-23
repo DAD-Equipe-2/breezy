@@ -17,7 +17,26 @@ export async function loginUser(username, password) {
   return true;
 }
 
-export async function registerUser({ username, password }) {
+export async function registerUser({ username, email, password }) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`, 
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, email, password }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || "Failed to register");
+  }
+
+  return true;
+}
+
+export async function registerUserAuth({ username, password }) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`, 
   {
@@ -33,9 +52,7 @@ export async function registerUser({ username, password }) {
     throw new Error(errorData.error || "Failed to register");
   }
 
-  const data = await res.json();
-  console.log("User registered:", data);
-  return data;
+  return true;
 }
 
 export async function profileCreateOrUpdate(user) {

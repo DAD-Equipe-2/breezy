@@ -8,6 +8,7 @@
   --tertiary: #0084FF;
   --quaternary: #FF0000;
   --quinary: #E7ECF0;
+  --green: #15e615cb;
 }
 
 @theme inline {
@@ -18,6 +19,7 @@
   --color-tertiary: var(--tertiary);
   --color-quaternary: var(--quaternary);
   --color-quinary: var(--quinary);
+  --color-green: var(--green);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

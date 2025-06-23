@@ -2,7 +2,7 @@
 
 import Input from "@/components/input";
 import Button from "@/components/button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { loginUser } from "@/utils/auth";
 
@@ -12,6 +12,9 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError]     = useState("");
   const [loading, setLoading] = useState(false);
+
+  const searchParams = useSearchParams();
+  const registered = searchParams.get('registered');
 
   const handleLogin = async () => {
     setError("");
@@ -42,7 +45,7 @@ export default function Login() {
       <div className="flex flex-col text-3xl font-bold font-Roboto justify-center items-center w-full max-w-md mx-auto mt-2">
         <p className="ml-2 mb-4">Login to Breesy</p>
 
-        <div className="w-full my-2">
+        <div className="flex w-full my-2 items-center justify-center">
           <Input
             Hint="Username"
             Type="Text"
@@ -51,7 +54,7 @@ export default function Login() {
           />
         </div>
 
-        <div className="w-full my-2">
+        <div className="flex items-center justify-center w-full my-2">
           <Input
             Hint="Password"
             Type="Password"
@@ -65,7 +68,10 @@ export default function Login() {
             {error}
           </p>
         )}
-
+        <div className="flex flex-col text-green text-sm font-bold font-Roboto justify-center items-center w-full max-w-md mx-auto mt-2">
+        {registered === 'true' && <p>Account created successfully !</p>}
+        {/* Ton formulaire de login ici */}
+        </div>
         <div className="my-4">
           <Button
             text={loading ? "Loading..." : "Login"}

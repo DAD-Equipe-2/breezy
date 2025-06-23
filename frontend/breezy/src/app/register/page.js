@@ -5,7 +5,7 @@ import Button from "@/components/button";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { profileCreateOrUpdate, registerUser } from "@/utils/auth";
+import { profileCreateOrUpdate, registerUser, registerUserAuth } from "@/utils/auth";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -49,13 +49,10 @@ export default function Register() {
       }
       setLoading(true);
       try {
-        const user = await registerUser({username, password});
-        const userID = user.id;
+        await registerUser({username, email : nickname, password});
+        await registerUserAuth({username, password});
 
-        await profileCreateOrUpdate(userID);
-        
-        // cookie 'accessToken' est déjà posé par le navigateur
-        router.push("/login");
+        router.push("/login?registered=true");
       } catch (err) {
         console.error(err);
         setError("An error occurred during registration. Please try again.");
