@@ -96,12 +96,11 @@ exports.login = async (req, res) => {
 
 
 exports.verify = async (req, res) => {
-    // Set headers for internal use
-    req.headers['x-user-name'] = req.user.username;
-    req.headers['x-user-role'] = req.user.role;
-
-    return res.status(200).json({ message: 'Token is valid' });
-}
+    // Set headers for user information
+    res.set('X-User-Name', req.user.username);
+    res.set('X-User-Role', req.user.role);
+    return res.sendStatus(204);
+};
 
 
 exports.renewToken = async (req, res) => {
