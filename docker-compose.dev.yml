@@ -2,6 +2,7 @@ services:
   
   gateway:
     image: nginx:alpine
+    restart: always
     container_name: breezy-api-gateway
     ports:
       - "8080:8080"
@@ -10,8 +11,14 @@ services:
     networks:
       - app-network
     depends_on:
+      - documentation-service
       - auth-service
+      - user-service
+      - profile-service
+      - post-service
+      - message-service
   
+  # -- DOCUMENTATION SERVICE --
   documentation-service:
     build:
       context: ./backend/docs
@@ -21,15 +28,17 @@ services:
     networks:
       - app-network
 
+  # -- AUTH SERVICE --
   auth-service:
     build:
       context: ./backend/auth
-      dockerfile: Dockerfile.dev    # Use Dockerfile.dev for development, Dockerfile for production
+      dockerfile: Dockerfile.dev
+    restart: always
     container_name: breezy-auth-service
     environment:
       - MONGO_URI=mongodb://auth-mongo:27017/auth
     volumes:
-      - ./backend/auth:/app         # Mount local source czode into container (remove for production)
+      - ./backend/auth:/app         # Mount local source code into container (remove for production)
       - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
     networks:
       - app-network
@@ -38,12 +47,123 @@ services:
 
   auth-mongo:
     image: mongo:latest
+    restart: always
     container_name: breezy-auth-mongo
     volumes:
       - auth-mongo-data:/data/db
+    networks:
+      - app-network
+
+  # -- USER SERVICE --
+  user-service:
+    build:
+      context: ./backend/user
+      dockerfile: Dockerfile.dev
+    restart: always
+    container_name: breezy-user-service
+    environment:
+      - MONGO_URI=mongodb://user-mongo:27017/user
+    volumes:
+      - ./backend/user:/app         # Mount local source code into container (remove for production)
+      - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
+    networks:
+      - app-network
+    depends_on:
+      - user-mongo
+
+  user-mongo:
+    image: mongo:latest
+    restart: always
+    container_name: breezy-user-mongo
+    volumes:
+      - user-mongo-data:/data/db
+    networks:
+      - app-network
+
+  # -- PROFILE SERVICE --
+  profile-service:
+    build:
+      context: ./backend/profile
+      dockerfile: Dockerfile.dev
+    restart: always
+    container_name: breezy-profile-service
+    environment:
+      - MONGO_URI=mongodb://profile-mongo:27017/profile
+    volumes:
+      - ./backend/profile:/app         # Mount local source code into container (remove for production)
+      - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
+    networks:
+      - app-network
+    depends_on:
+      - profile-mongo
+
+  profile-mongo:
+    image: mongo:latest
+    restart: always
+    container_name: breezy-profile-mongo
+    volumes:
+      - profile-mongo-data:/data/db
+    networks:
+      - app-network
+
+  # -- POST SERVICE --
+  post-service:
+    build:
+      context: ./backend/post
+      dockerfile: Dockerfile.dev
+    restart: always
+    container_name: breezy-post-service
+    environment:
+      - MONGO_URI=mongodb://post-mongo:27017/post
+    volumes:
+      - ./backend/post:/app         # Mount local source code into container (remove for production)
+      - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
+    networks:
+      - app-network
+    depends_on:
+      - post-mongo
+
+  post-mongo:
+    image: mongo:latest
+    restart: always
+    container_name: breezy-post-mongo
+    volumes:
+      - post-mongo-data:/data/db
+    networks:
+      - app-network
+
+  # -- MESSAGE SERVICE --
+  message-service:
+    build:
+      context: ./backend/message
+      dockerfile: Dockerfile.dev
+    restart: always
+    container_name: breezy-message-service
+    environment:
+      - MONGO_URI=mongodb://message-mongo:27017/message
+    volumes:
+      - ./backend/message:/app         # Mount local source code into container (remove for production)
+      - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
+    networks:
+      - app-network
+    depends_on:
+      - message-mongo
+
+  message-mongo:
+    image: mongo:latest
+    restart: always
+    container_name: breezy-message-mongo
+    volumes:
+      - message-mongo-data:/data/db
+    networks:
+      - app-network
 
 volumes:
   auth-mongo-data:
+  user-mongo-data:
+  profile-mongo-data:
+  post-mongo-data:
+  message-mongo-data:
 
 networks:
   app-network:

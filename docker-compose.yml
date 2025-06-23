@@ -11,8 +11,14 @@ services:
     networks:
       - app-network
     depends_on:
+      - documentation-service
       - auth-service
-
+      - user-service
+      - profile-service
+      - post-service
+      - message-service
+  
+  # -- DOCUMENTATION SERVICE --
   documentation-service:
     build:
       context: ./backend/docs
@@ -22,6 +28,7 @@ services:
     networks:
       - app-network
 
+  # -- AUTH SERVICE --
   auth-service:
     build:
       context: ./backend/auth
@@ -44,16 +51,15 @@ services:
     networks:
       - app-network
 
+  # -- USER SERVICE --
   user-service:
     build:
       context: ./backend/user
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+    restart: always
     container_name: breezy-user-service
     environment:
-      - DB_CONNECTION=mongodb://user-mongo:27017/user
-    volumes:
-      - ./backend/user:/app
-      - /app/node_modules
+      - MONGO_URI=mongodb://user-mongo:27017/user
     networks:
       - app-network
     depends_on:
@@ -61,22 +67,22 @@ services:
 
   user-mongo:
     image: mongo:latest
+    restart: always
     container_name: breezy-user-mongo
     volumes:
       - user-mongo-data:/data/db
     networks:
       - app-network
 
+  # -- PROFILE SERVICE --
   profile-service:
     build:
       context: ./backend/profile
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+    restart: always
     container_name: breezy-profile-service
     environment:
-      - DB_CONNECTION=mongodb://profile-mongo:27017/profile
-    volumes:
-      - ./backend/profile:/app
-      # - /app/node_modules            # commenter pour éviter d’écraser node_modules
+      - MONGO_URI=mongodb://profile-mongo:27017/profile
     networks:
       - app-network
     depends_on:
@@ -84,22 +90,22 @@ services:
 
   profile-mongo:
     image: mongo:latest
+    restart: always
     container_name: breezy-profile-mongo
     volumes:
       - profile-mongo-data:/data/db
     networks:
       - app-network
 
+  # -- POST SERVICE --
   post-service:
     build:
       context: ./backend/post
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+    restart: always
     container_name: breezy-post-service
     environment:
-      - DB_CONNECTION=mongodb://post-mongo:27017/post
-    volumes:
-      - ./backend/post:/app
-      # - /app/node_modules
+      - MONGO_URI=mongodb://post-mongo:27017/post
     networks:
       - app-network
     depends_on:
@@ -107,22 +113,22 @@ services:
 
   post-mongo:
     image: mongo:latest
+    restart: always
     container_name: breezy-post-mongo
     volumes:
       - post-mongo-data:/data/db
     networks:
       - app-network
 
-
+  # -- MESSAGE SERVICE --
   message-service:
     build:
       context: ./backend/message
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+    restart: always
     container_name: breezy-message-service
     environment:
-      - DB_CONNECTION=mongodb://message-mongo:27017/message
-    volumes:
-      - ./backend/message:/app
+      - MONGO_URI=mongodb://message-mongo:27017/message
     networks:
       - app-network
     depends_on:
@@ -130,6 +136,7 @@ services:
 
   message-mongo:
     image: mongo:latest
+    restart: always
     container_name: breezy-message-mongo
     volumes:
       - message-mongo-data:/data/db
