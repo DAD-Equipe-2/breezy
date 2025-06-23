@@ -8,10 +8,11 @@ const app  = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
 var corsOptions = {
     origin: true,
-    credentials: true };
-
+    credentials: true 
+};
 app.use(cors(corsOptions));
 
 
