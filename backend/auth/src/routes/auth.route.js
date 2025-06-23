@@ -77,7 +77,7 @@ router.post('/login', requireBodyParams('username', 'password'), authController.
 /**
  * @swagger
  * /verify:
- *   post:
+ *   get:
  *     summary: Verify access token
  *     tags: [🔒 Internal]
  *     security:
@@ -88,7 +88,7 @@ router.post('/login', requireBodyParams('username', 'password'), authController.
  *       401:
  *         description: Unauthorized
 */
-router.post('/verify', authenticateJWT(process.env.ACCESS_JWT_KEY), authController.verify);
+router.get('/verify', authenticateJWT(process.env.ACCESS_JWT_KEY), authController.verify);
 
 
 /**
