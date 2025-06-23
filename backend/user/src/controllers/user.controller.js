@@ -1,20 +1,28 @@
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
+const User = require('../models/user.model');
 
-// Créer utilisateur
+
 exports.createUser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { nickname } = req.body;
+    const username     = req.headers['x-user-name'];
 
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await User.create({ username, email, password: hashedPassword });
-        res.status(201).json(user);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+        // Check if the user already exists
+        const existingUser = await User.findOne({ username: username });
+        if (existingUser) return res.status(400).json({ error: 'User already exists' });
+
+        const newUser = new User({
+            username: username,
+            nickname: nickname,
+        });
+        await newUser.save();
+        res.status(201).json({ message: 'User created successfully', user: newUser });
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
-// Obtenir utilisateur par ID
+
 exports.getUser = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
@@ -24,7 +32,7 @@ exports.getUser = async (req, res) => {
     }
 };
 
-// Suivre un utilisateur
+
 exports.followUser = async (req, res) => {
     const me = req.params.id;
     const target = req.body.targetId;
@@ -40,7 +48,7 @@ exports.followUser = async (req, res) => {
     }
 };
 
-// Unfollow
+
 exports.unfollowUser = async (req, res) => {
     const me = req.params.id;
     const target = req.body.targetId;
@@ -55,7 +63,7 @@ exports.unfollowUser = async (req, res) => {
     }
 };
 
-// Récupérer followers
+
 exports.getFollowers = async (req, res) => {
     try {
         const user = await User.findById(req.params.id).populate('followers', 'username avatar');
@@ -65,7 +73,7 @@ exports.getFollowers = async (req, res) => {
     }
 };
 
-// Récupérer following
+
 exports.getFollowing = async (req, res) => {
     try {
         const user = await User.findById(req.params.id).populate('following', 'username avatar');
