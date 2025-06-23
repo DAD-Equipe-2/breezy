@@ -8,8 +8,17 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   name: Auth
- *   description: Authentication related endpoints
+ *   - name: Auth
+ *     description: Authentication related endpoints
+ *   - name: 🔒 Internal
+ *     description: Internal endpoints for authentication service
+ * components:
+ *  securitySchemes:
+ *   bearerAuth:
+ *    type: http
+ *    scheme: bearer
+ *    bearerFormat: JWT
+ *    description: Use the access token to authenticate requests. The token should be included in the Authorization
 */
 
 
@@ -18,7 +27,7 @@ const router = express.Router();
  * /register:
  *   post:
  *     summary: Register a new user
- *     tags: [Auth]
+ *     tags: [🔒 Internal]
  *     requestBody:
  *       required: true
  *       content:
@@ -35,7 +44,7 @@ const router = express.Router();
  *         description: User registered successfully
  *       400:
  *         description: Bad request
- */
+*/
 router.post('/register', requireBodyParams('username', 'password'), authController.register);
 
 
@@ -61,7 +70,7 @@ router.post('/register', requireBodyParams('username', 'password'), authControll
  *         description: User logged in successfully
  *       400:
  *         description: Bad request
- */
+*/
 router.post('/login', requireBodyParams('username', 'password'), authController.login);
 
 
@@ -70,7 +79,7 @@ router.post('/login', requireBodyParams('username', 'password'), authController.
  * /verify:
  *   post:
  *     summary: Verify access token
- *     tags: [Auth]
+ *     tags: [🔒 Internal]
  *     security:
  *      - bearerAuth: []
  *     responses:
@@ -78,7 +87,7 @@ router.post('/login', requireBodyParams('username', 'password'), authController.
  *         description: Access token is valid
  *       401:
  *         description: Unauthorized
- */
+*/
 router.post('/verify', authenticateJWT(process.env.ACCESS_JWT_KEY), authController.verify);
 
 
@@ -95,8 +104,25 @@ router.post('/verify', authenticateJWT(process.env.ACCESS_JWT_KEY), authControll
  *         description: Access token renewed successfully
  *       401:
  *         description: Unauthorized
- */
+*/
 router.post('/renew', authenticateJWT(process.env.REFRESH_JWT_KEY), authController.renewToken);
+
+
+/**
+ * @swagger
+ * /delete:
+ *   delete:
+ *     summary: Delete user account
+ *     tags: [🔒 Internal]
+ *     security:
+ *      - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User account deleted successfully
+ *       401:
+ *         description: Unauthorized
+*/
+router.delete('/delete', authController.delete);
 
 
 module.exports = router;
