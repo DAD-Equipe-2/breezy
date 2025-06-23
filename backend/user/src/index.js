@@ -3,6 +3,7 @@ require('dotenv').config();
 const express  = require('express');
 const cors     = require('cors');
 const mongoose = require('mongoose');
+const swagger  = require('./utils/swagger');
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -24,6 +25,10 @@ mongoose.connect(process.env.MONGO_URI)
     console.error('❌ MongoDB connection error:', err);
     process.exit(1);
 });
+
+
+// Swagger docs
+swagger.setupSwagger(app);
 
 
 // Routes

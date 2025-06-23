@@ -15,6 +15,10 @@ const services = [
         name: 'Gateway Service',
         url: '/api/v1/gateway/docs/swagger.json',
     },
+    {
+        name: 'User Service',
+        url: '/api/v1/users/docs/swagger.json',
+    }
 ];
 
 const swaggerOptions = {

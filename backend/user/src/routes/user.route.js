@@ -8,12 +8,51 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   name: User
- *   description: User related endpoints
+ *   - name: User
+ *     description: User related endpoints
+ *   - name: 🔒 Internal
+ *     description: Internal endpoints for user service
+ * components:
+ *  securitySchemes:
+ *   bearerAuth:
+ *    type: http
+ *    scheme: bearer
+ *    bearerFormat: JWT
+ *    description: Use the access token to authenticate requests. The token should be included in the Authorization
 */
 
-// Account Management
+
+/**
+* @swagger
+* /:
+*   post:
+*     summary: Create a new user
+*     tags: [🔒 Internal]
+*     security:
+*       - bearerAuth: []
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               nickname:
+*                 type: string
+*                 description: The nickname of the user
+*             required:
+*               - nickname
+*     responses:
+*       201:
+*         description: User created successfully
+*       400:
+*         description: Bad request, user already exists or missing parameters
+*       500:
+*         description: Internal server error
+*/
 router.post('/', userController.createUser);
+
+
 
 
 
