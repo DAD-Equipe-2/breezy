@@ -12,13 +12,6 @@ const router = express.Router();
  *     description: Authentication related endpoints
  *   - name: 🔒 Internal
  *     description: Internal endpoints for authentication service
- * components:
- *  securitySchemes:
- *   bearerAuth:
- *    type: http
- *    scheme: bearer
- *    bearerFormat: JWT
- *    description: Use the access token to authenticate requests. The token should be included in the Authorization
 */
 
 
@@ -81,7 +74,7 @@ router.post('/login', requireBodyParams('username', 'password'), authController.
  *     summary: Verify access token
  *     tags: [🔒 Internal]
  *     security:
- *      - bearerAuth: []
+ *      - cookieAuth: []
  *     responses:
  *       200:
  *         description: Access token is valid
@@ -98,7 +91,7 @@ router.get('/verify', authenticateJWT(process.env.ACCESS_JWT_KEY, 'access'), aut
  *     summary: Renew access token using refresh token
  *     tags: [Auth]
  *     security:
- *      - bearerAuth: []
+ *      - cookieAuth: []
  *     responses:
  *       200:
  *         description: Access token renewed successfully
@@ -115,7 +108,7 @@ router.post('/renew', authenticateJWT(process.env.REFRESH_JWT_KEY, 'refresh'), a
  *     summary: Delete user account
  *     tags: [🔒 Internal]
  *     security:
- *      - bearerAuth: []
+ *      - cookieAuth: []
  *     responses:
  *       200:
  *         description: User account deleted successfully
