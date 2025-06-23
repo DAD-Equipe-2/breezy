@@ -79,7 +79,13 @@ router.post('/login', requireBodyParams('username', 'password'), authController.
  *       200:
  *         description: Access token is valid
  *       401:
- *         description: Unauthorized
+ *         description: Invalid or missing refresh token
+ *       403:
+ *         description: Access token expired
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
 */
 router.get('/verify', authenticateJWT(process.env.ACCESS_JWT_KEY, 'access'), authController.verify);
 
@@ -96,7 +102,13 @@ router.get('/verify', authenticateJWT(process.env.ACCESS_JWT_KEY, 'access'), aut
  *       200:
  *         description: Access token renewed successfully
  *       401:
- *         description: Unauthorized
+ *         description: Invalid or missing refresh token
+ *       403:
+ *         description: Refresh token expired
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
 */
 router.post('/renew', authenticateJWT(process.env.REFRESH_JWT_KEY, 'refresh'), authController.renewToken);
 
