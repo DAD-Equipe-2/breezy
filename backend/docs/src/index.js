@@ -1,6 +1,5 @@
 const express   = require('express');
 const swaggerUi = require('swagger-ui-express');
-const { base } = require('../../auth/src/models/user.model');
 
 const app  = express();
 const PORT = 3000;

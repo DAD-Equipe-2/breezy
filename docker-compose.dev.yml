@@ -22,9 +22,12 @@ services:
   documentation-service:
     build:
       context: ./backend/docs
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     restart: always
     container_name: breezy-documentation-service
+    volumes:
+      - ./backend/docs:/app         # Mount local source code into container (remove for production)
+      - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
     networks:
       - app-network
 
