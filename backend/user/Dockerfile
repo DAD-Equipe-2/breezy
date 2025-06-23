@@ -1,14 +1,15 @@
-FROM node:16-alpine
+# Base image
+FROM node:24-alpine
 
-# 1) On positionne le répertoire de travail
+# Create app directory
 WORKDIR /app
 
-# 2) On copie d’abord package*.json et on installe les dépendances
-COPY package.json package-lock.json ./
+# Install dependencies
+COPY package*.json .
 RUN npm install
 
-# 3) Puis on copie le code source
+# Copy source files
 COPY . .
 
-# 4) Commande de démarrage
-CMD ["npm", "run", "dev"]
+# Start the app
+CMD [ "npm", "start" ]
