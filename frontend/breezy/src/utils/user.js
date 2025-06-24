@@ -16,3 +16,7 @@ export async function getCurrentUser() {
   }
   return localStorage.getItem('currentUser');
 }
+
+export function getUserProfilePictureUrl(username) {
+  return `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/avatar`
+}

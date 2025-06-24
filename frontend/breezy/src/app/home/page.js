@@ -10,7 +10,7 @@ import Link from "next/link";
 import Button from "@/components/button";
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import { getCurrentUser } from "@/utils/user";
+import { getCurrentUser, getUserProfilePictureUrl } from "@/utils/user";
 
 export default function HomePage() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function HomePage() {
         {currentUser && (
           <Link href={`/user/${currentUser}`} className="cursor-pointer">
             <img
-              src="/profil_picture.jpg"
+              src={getUserProfilePictureUrl(currentUser)}
               alt="Profile Picture"
               className="w-12 h-12 rounded-full mb-4 mt-4"
             />
