@@ -18,7 +18,11 @@ const services = [
     {
         name: 'User Service',
         url: '/api/v1/users/docs/swagger.json',
-    }
+    },
+    {
+        name: 'Post Service',
+        url: '/api/v1/posts/docs/swagger.json',
+    },
 ];
 
 const swaggerOptions = {

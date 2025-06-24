@@ -11,7 +11,7 @@ const {
     checkLike,
     addComment,
   getComments
-} = require('../controllers/postController');
+} = require('../controllers/post.controller');
 
 router.post('/', createPost);
 router.get('/', listPosts);

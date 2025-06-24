@@ -1,19 +1,40 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
 require('dotenv').config();
 
+const express  = require('express');
+const cors     = require('cors');
+const mongoose = require('mongoose');
+const swagger  = require('./utils/swagger');
+
+const port = process.env.PORT || 3000;
 const app = express();
-app.use(cors());
+
+
+// Middlewares
+var corsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true 
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
-mongoose.connect(process.env.DB_CONNECTION)
-    .then(() => console.log('MongoDB connected for Post Service'))
-    .catch(err => console.error(err));
 
-app.use('/api/v1/post', require('./routes/postRoutes'));
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log('✅ Connected to MongoDB'))
+.catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
+});
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Post service running on port ${PORT}`);
+
+// Swagger docs
+swagger.setupSwagger(app);
+
+
+// Routes
+app.use('/', require('./routes/post.route'));
+
+
+app.listen(port, () => {
+    console.log(`Post service running on port ${port}`);
 });
