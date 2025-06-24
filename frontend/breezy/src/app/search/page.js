@@ -10,7 +10,7 @@ export default function Search() {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
 
-    const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+    const BACKEND = process.env.NEXT_PUBLIC_API_BASE_URL;
 
     const handleSearch = async (q) => {
         const text = q.trim();
@@ -21,7 +21,9 @@ export default function Search() {
 
         try {
             const res = await axios.get(
-                `${BACKEND}/users/search?query=${encodeURIComponent(text)}`
+                `${BACKEND}/users/search?username=${encodeURIComponent(text)}`,
+                {
+                    withCredentials: true,}
             );
             setResults(res.data);
         } catch (err) {

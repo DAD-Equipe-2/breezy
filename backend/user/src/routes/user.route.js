@@ -45,6 +45,31 @@ const upload = multer();
 router.get('/batch', accountController.getUsersByUsernames);
 
 /**
+ * @swagger
+ * /search:
+ *  get:
+ *    summary: Search for users by username
+ *    tags: [Account]
+ *    security:
+ *      - cookieAuth: []
+ *    parameters:
+ *      - in: query
+ *        name: username
+ *        required: true
+ *        description: The username to search for
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Users found
+ *      400:
+ *        description: Bad request, username query parameter is required
+ *      500:
+ *        description: Internal server error
+ */
+router.get('/search', accountController.searchUsers);
+
+/**
 * @swagger
 * /:
 *   post:
@@ -386,7 +411,5 @@ router.get('/:username/followers', followController.getFollowers);
 */
 router.get('/:username/following', followController.getFollowing);
 
-/* GET /api/v1/users/search?query=<texte> */
-router.get('/search', accountController.searchUsers);
 
 module.exports = router;
