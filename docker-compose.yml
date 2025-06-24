@@ -15,9 +15,9 @@ services:
       - gateway-service
       - auth-service
       - user-service
-      - profile-service
+      # - profile-service
       - post-service
-      - message-service
+      # - message-service
   
   # -- DOCUMENTATION SERVICE --
   documentation-service:
@@ -86,27 +86,27 @@ services:
       - app-network
 
   # -- PROFILE SERVICE --
-  profile-service:
-    build:
-      context: ./backend/profile
-      dockerfile: Dockerfile
-    restart: always
-    container_name: breezy-profile-service
-    environment:
-      - MONGO_URI=mongodb://profile-mongo:27017/profile
-    networks:
-      - app-network
-    depends_on:
-      - profile-mongo
+  # profile-service:
+  #   build:
+  #     context: ./backend/profile
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   container_name: breezy-profile-service
+  #   environment:
+  #     - MONGO_URI=mongodb://profile-mongo:27017/profile
+  #   networks:
+  #     - app-network
+  #   depends_on:
+  #     - profile-mongo
 
-  profile-mongo:
-    image: mongo:latest
-    restart: always
-    container_name: breezy-profile-mongo
-    volumes:
-      - profile-mongo-data:/data/db
-    networks:
-      - app-network
+  # profile-mongo:
+  #   image: mongo:latest
+  #   restart: always
+  #   container_name: breezy-profile-mongo
+  #   volumes:
+  #     - profile-mongo-data:/data/db
+  #   networks:
+  #     - app-network
 
   # -- POST SERVICE --
   post-service:
@@ -132,34 +132,34 @@ services:
       - app-network
 
   # -- MESSAGE SERVICE --
-  message-service:
-    build:
-      context: ./backend/message
-      dockerfile: Dockerfile
-    restart: always
-    container_name: breezy-message-service
-    environment:
-      - MONGO_URI=mongodb://message-mongo:27017/message
-    networks:
-      - app-network
-    depends_on:
-      - message-mongo
+  # message-service:
+  #   build:
+  #     context: ./backend/message
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   container_name: breezy-message-service
+  #   environment:
+  #     - MONGO_URI=mongodb://message-mongo:27017/message
+  #   networks:
+  #     - app-network
+  #   depends_on:
+  #     - message-mongo
 
-  message-mongo:
-    image: mongo:latest
-    restart: always
-    container_name: breezy-message-mongo
-    volumes:
-      - message-mongo-data:/data/db
-    networks:
-      - app-network
+  # message-mongo:
+  #   image: mongo:latest
+  #   restart: always
+  #   container_name: breezy-message-mongo
+  #   volumes:
+  #     - message-mongo-data:/data/db
+  #   networks:
+  #     - app-network
 
 volumes:
   auth-mongo-data:
   user-mongo-data:
-  profile-mongo-data:
+  # profile-mongo-data:
   post-mongo-data:
-  message-mongo-data:
+  # message-mongo-data:
 
 networks:
   app-network:
