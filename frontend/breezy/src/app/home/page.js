@@ -8,17 +8,29 @@ import { CiSettings } from "react-icons/ci";
 import { GiFeather } from "react-icons/gi";
 import Link from "next/link";
 import Button from "@/components/button";
+import { useEffect } from "react";
+import axios from 'axios';
+import { getCurrentUser } from "@/utils/user";
 
 export default function HomePage() {
   const router = useRouter();
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   return (
     <div className="flex flex-col bg-background text-foreground w-full min-h-screen pt-16 pb-24">
       {/* Header (fixé en haut) */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-background flex items-center px-4 h-16">
         {/* Icône gauche */}
-        <Return />
-
+        <button>
+          <img
+                src="/profil_picture.jpg"
+                alt="Profile Picture"
+                className="w-12 h-12 rounded-full mb-4"
+          />
+        </button>
         {/* Logo centré (absolu) */}
         <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <img
