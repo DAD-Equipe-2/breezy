@@ -386,5 +386,6 @@ router.get('/:username/followers', followController.getFollowers);
 */
 router.get('/:username/following', followController.getFollowing);
 
+router.get('/search', userController.searchUsers);
 
 module.exports = router;
