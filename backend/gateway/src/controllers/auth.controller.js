@@ -1,7 +1,7 @@
 const axios = require('axios');
 
-AUTH_SERVICE_URL = 'http://auth-service:3000';
-USER_SERVICE_URL = 'http://user-service:3000';
+const AUTH_SERVICE_URL = 'http://auth-service:3000';
+const USER_SERVICE_URL = 'http://user-service:3000';
 
 
 exports.register = async (req, res) => {
