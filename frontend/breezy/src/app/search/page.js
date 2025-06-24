@@ -10,12 +10,24 @@ export default function Search() {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
 
-    const handleSearch = async (query) => {
+    const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+
+    const handleSearch = async (q) => {
+        const text = q.trim();
+        if (!text) {
+            setResults([]);
+            return;
+        }
+
         try {
-            const res = await axios.get(`/api/user/search?query=${query}`);
+            const res = await axios.get(
+                `${BACKEND}/users/search?query=${encodeURIComponent(text)}`
+            );
             setResults(res.data);
-        } catch (error) {
-            console.error('Erreur lors de la recherche :', error);
+        } catch (err) {
+            // si pas trouvé (404) ou autre, on vide le tableau
+            setResults([]);
+            console.error("Erreur recherche frontend :", err.response?.status);
         }
     };
 
@@ -24,7 +36,7 @@ export default function Search() {
             <div className="flex items-center justify-start mb-3 px-4 gap-4">
                 <Return />
                 <SearchBar
-                    placeholder="Search #hashtag or @people"
+                    placeholder="Search @people"
                     width="w-full"
                     rounded={true}
                     query={query}
