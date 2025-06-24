@@ -2,8 +2,8 @@
 
 import Input from "@/components/input";
 import Button from "@/components/button";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { loginUser } from "@/utils/auth";
 
 export default function Login() {
@@ -12,9 +12,13 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError]     = useState("");
   const [loading, setLoading] = useState(false);
+  const [registered, setRegistered] = useState(null);
 
-  const searchParams = useSearchParams();
-  const registered = searchParams.get('registered');
+  // Récupère registered dès que le composant monte
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setRegistered(params.get('registered'));
+  }, []);
 
   const handleLogin = async () => {
     setError("");
