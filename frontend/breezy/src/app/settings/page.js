@@ -5,20 +5,34 @@ import Input from "@/components/input";
 import Button from "@/components/button";
 import Return from "@/components/return";
 import { FaCheck } from "react-icons/fa";
-import { getCurrentUser, getUserProfilePictureUrl, updateUserProfile, uploadProfilePicture } from "@/utils/user";
+import { getAuthenticatedUserProfile, getCurrentUser, getUserProfilePictureUrl, updateUserProfile, uploadProfilePicture } from "@/utils/user";
 
 export default function EditProfilePage() {
   const [nickname, setNickname] = useState("");
   const [bio, setBio] = useState("");
+  const [userData, setUserData] = useState({
+    username: "",
+    nickname: "",
+    bio: "",
+    createdAt: ""
+  });
   const [currentUser, setCurrentUser] = useState(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
     async function fetchUser() {
-      const username = await getCurrentUser();
-      setCurrentUser(username);
+      try {
+        const data = await getAuthenticatedUserProfile();
+        setUserData({
+          username: data.username,
+          nickname: data.nickname,
+          bio: data.bio,
+          createdAt: data.createdAt
+        });
+      } catch (error) {
+        console.error("Failed to fetch user profile", error);
+      } 
     }
-
     fetchUser();
   }, []);
 
@@ -83,7 +97,7 @@ export default function EditProfilePage() {
       {/* Profile Picture */}
       <div className="flex flex-col items-center space-y-2 mb-6 w-full max-w-3xl">
           <img
-            src={getUserProfilePictureUrl(currentUser)}
+            src={getUserProfilePictureUrl(userData.username)}
             alt="Profile"
             className="w-28 h-28 rounded-full object-cover"
             onError={(e) => {
@@ -112,14 +126,15 @@ export default function EditProfilePage() {
 
       {/* Inputs */}
       <div className="flex flex-col items-center space-y-4 w-full max-w-3xl">
-        <Input Hint="Username" Type="text" FlexType="flex-row" value={currentUser} disabled={true}/>
+        <Input Hint="Username" Type="text" FlexType="flex-row" value={userData.username} disabled={true}/>
         <Input
           Hint="Nickname"
           Type="text"
           FlexType="flex-row"
+          value={userData.nickname}
           onChange={(e) => setNickname(e.target.value)}
         />
-        <Input Hint="Bio" textarea={true} FlexType="flex-col" onChange={(e) => setBio(e.target.value)}/>
+        <Input Hint="Bio" textarea={true} FlexType="flex-col" value={userData.bio} onChange={(e) => setBio(e.target.value)}/>
       </div>
     </div>
   );

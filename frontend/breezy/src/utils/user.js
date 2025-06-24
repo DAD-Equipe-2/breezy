@@ -101,3 +101,16 @@ export async function uploadProfilePicture(file) {
     throw error;
   }
 }
+
+// Function to get the authenticated user's profile
+export async function getAuthenticatedUserProfile() {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/me`, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching authenticated user profile:", error);
+    throw error;
+  }
+}
