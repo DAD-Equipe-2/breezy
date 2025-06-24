@@ -19,6 +19,30 @@ const upload = multer();
  *     description: Internal endpoints for user service
 */
 
+/**
+* @swagger
+* /batch:
+*   get:
+*     summary: Get users by their usernames
+*     tags: [🔒 Internal]
+*     security:
+*       - cookieAuth: []
+*     parameters:
+*       - in: query
+*         name: usernames
+*         required: true
+*         description: Comma-separated list of usernames to retrieve
+*         schema:
+*           type: string
+*     responses:
+*       200:
+*         description: Users retrieved successfully
+*       400:
+*         description: Bad request, invalid or missing usernames parameter
+*       500:
+*         description: Internal server error
+*/
+router.get('/batch', accountController.getUsersByUsernames);
 
 /**
 * @swagger
@@ -216,6 +240,8 @@ router.get('/me/is-following/:username', followController.isFollowing);
  *   get:
  *     summary: Get a user's profile by username
  *     tags: [Account]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: username
@@ -239,6 +265,8 @@ router.get('/:username', accountController.getUser);
  *   get:
  *     summary: Get a user's avatar by username
  *     tags: [Account]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: username
@@ -257,36 +285,13 @@ router.get('/:username', accountController.getUser);
 router.get('/:username/avatar', accountController.getAvatar);
 
 /**
-* @swagger
-* /batch:
-*   get:
-*     summary: Get users by their IDs
-*     tags: [🔒 Internal]
-*     security:
-*       - cookieAuth: []
-*     parameters:
-*       - in: query
-*         name: ids
-*         required: true
-*         description: Comma-separated list of user IDs to retrieve
-*         schema:
-*           type: string
-*     responses:
-*       200:
-*         description: Users retrieved successfully
-*       400:
-*         description: Bad request, invalid or missing IDs parameter
-*       500:
-*         description: Internal server error
-*/
-router.get('/batch', requireBodyParams('ids'), accountController.getUsersByIds);
-
-/**
  * @swagger
  * /{username}/follow:
  *   post:
  *     summary: Follow a user
  *     tags: [Follow]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: username
@@ -310,6 +315,8 @@ router.post('/:username/follow', followController.followUser);
 *   delete:
 *     summary: Unfollow a user
 *     tags: [Follow]
+*     security:
+*       - cookieAuth: []
 *     parameters:
 *       - in: path
 *         name: username
@@ -335,6 +342,8 @@ router.delete('/:username/follow', followController.unfollowUser);
 *   get:
 *     summary: Get a user's followers
 *     tags: [Follow]
+*     security:
+*       - cookieAuth: []
 *     parameters:
 *       - in: path
 *         name: username
@@ -358,6 +367,8 @@ router.get('/:username/followers', followController.getFollowers);
  *   get:
  *     summary: Get a user's following
  *     tags: [Follow]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: username
