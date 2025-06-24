@@ -21,11 +21,11 @@ export async function getUserByUsername(username) {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}`, {
       withCredentials: true
     });
-    if (response.status == 404) {
-      return null;
-    }
     return response.data;
   } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return null; // User not found
+    }
     console.error('Error fetching user by username:', error);
     throw error;
   }
@@ -39,6 +39,9 @@ export async function getNumberOfFollowersAndFollowingByUsername(username) {
     });
     numbers.followers = response.data.length;
   } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return null; // User not found
+    }
     console.error('Error fetching followers and following:', error);
     throw error;
   }
