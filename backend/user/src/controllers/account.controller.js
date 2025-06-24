@@ -150,3 +150,30 @@ exports.getUsersByUsernames = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+// Recherche d'utilisateurs par username (insensible à la casse)
+exports.searchUsers = async (req, res) => {
+    const { query } = req.query;
+    if (!query) {
+        return res.status(400).json({ message: 'Paramètre "query" manquant' });
+    }
+
+    try {
+        const users = await User.find({
+            username: { $regex: query, $options: 'i' }
+        })
+            .select('-_id username nickname bio')
+            .lean();
+
+        // Optionnel : enrichir avec l'URL de l'avatar
+        const enriched = users.map(u => ({
+            ...u,
+            avatarUrl: `${SERVICE_URL}/${u.username}/avatar`
+        }));
+
+        return res.status(200).json(enriched);
+    } catch (err) {
+        console.error('searchUsers error:', err);
+        return res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+};
