@@ -14,6 +14,7 @@ export async function getCurrentUser() {
       console.error('Error using Axios:', error);
     });
   }
+  return localStorage.getItem('currentUser');
 }
 
 export async function getUserByUsername(username) {
@@ -59,4 +60,44 @@ export async function getNumberOfFollowersAndFollowingByUsername(username) {
 
 export function getUserProfilePictureUrl(username) {
   return `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/avatar`
+}
+
+// Function to update user profile
+export async function updateUserProfile(nickname, bio) {
+  try {
+    const response = await axios.patch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/me`,
+      { nickname, bio },
+      {
+        withCredentials: true
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
+}
+
+// Function to upload a profile picture
+export async function uploadProfilePicture(file) {
+  const formData = new FormData();
+  formData.append('avatar', file);
+
+  try {
+    const response = await axios.patch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/me/avatar`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
+    throw error;
+  }
 }

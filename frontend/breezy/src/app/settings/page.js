@@ -1,20 +1,71 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Input from "@/components/input";
 import Button from "@/components/button";
 import Return from "@/components/return";
 import { FaCheck } from "react-icons/fa";
+import { getCurrentUser, getUserProfilePictureUrl, updateUserProfile, uploadProfilePicture } from "@/utils/user";
 
 export default function EditProfilePage() {
+  const [nickname, setNickname] = useState("");
+  const [bio, setBio] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const username = await getCurrentUser();
+      setCurrentUser(username);
+    }
+
+    fetchUser();
+  }, []);
+
+  const handlePictureChange = (event) => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  if (!validTypes.includes(file.type)) {
+    alert("Seuls les fichiers PNG, JPG ou GIF sont autorisés.");
+    return;
+  }
+
+  uploadProfilePicture(file)
+    .then(() => {
+      console.log("Upload réussi !");r
+    })
+    .catch((error) => {
+      console.error("Erreur d'upload :", error);
+    });
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async () => {
+    try {
+      await updateUserProfile(nickname, bio);
+      alert("Profil mis à jour avec succès !");
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du profil :", error);
+      alert("Une erreur est survenue lors de la mise à jour du profil.");
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 flex flex-col items-center">
+    <div className="min-h-screen bg-background text-foreground p-4 flex flex-col items-center w-full">
       {/* Header */}
-      <div className="flex items-center justify-between w-full max-w-3xl mb-6">
-        <Return></Return>
-        <h1 className="text-lg font-semibold font-Roboto">Edit Profile</h1>
+      <div className="relative flex items-center justify-between w-full max-w-3xl mb-6">
+        <Return />
+        <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg font-semibold font-Roboto">
+          Edit Profile
+        </h1>
         <Button
-          action={() => console.log("Valider")}
+          action={handleFileChange}
           icon={
             <div className="flex items-center gap-2 text-foreground">
               <FaCheck />
@@ -31,9 +82,25 @@ export default function EditProfilePage() {
 
       {/* Profile Picture */}
       <div className="flex flex-col items-center space-y-2 mb-6 w-full max-w-3xl">
-        <div className="w-28 h-28 rounded-full bg-gray-300 dark:bg-gray-600" />
+          <img
+            src={getUserProfilePictureUrl(currentUser)}
+            alt="Profile"
+            className="w-28 h-28 rounded-full object-cover"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/profil_picture.jpg";
+            }}
+          />
+        <input
+          type="file"
+          accept="image/png, image/jpeg, image/jpg, image/gif"
+          className="hidden"
+          ref={fileInputRef}
+          onChange={handlePictureChange}
+        />
+
         <Button
-          action={() => console.log("Changer photo")}
+          action={triggerFileInput}
           text="Change Profile Picture"
           textcolor="text-foreground"
           bordercolor="border-foreground"
@@ -43,11 +110,16 @@ export default function EditProfilePage() {
         />
       </div>
 
-      {/* Inputs displayed horizontally */}
+      {/* Inputs */}
       <div className="flex flex-col items-center space-y-4 w-full max-w-3xl">
-        <Input Hint="Name" Type="text" FlexType="flex-row" />
-        <Input Hint="Username" Type="text" FlexType="flex-row" />
-        <Input Hint="Bio" textarea={true} FlexType="flex-col" />
+        <Input Hint="Username" Type="text" FlexType="flex-row" value={currentUser} disabled={true}/>
+        <Input
+          Hint="Nickname"
+          Type="text"
+          FlexType="flex-row"
+          onChange={(e) => setNickname(e.target.value)}
+        />
+        <Input Hint="Bio" textarea={true} FlexType="flex-col" onChange={(e) => setBio(e.target.value)}/>
       </div>
     </div>
   );

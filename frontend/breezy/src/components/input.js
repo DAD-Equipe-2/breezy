@@ -7,7 +7,8 @@ export default function Input({
   FlexType = "flex-col",
   WithBorder = true,
   Gap = "gap-2",
-  textarea = false
+  textarea = false,
+  disabled = false
 }) {
   return (
     <div
@@ -26,6 +27,7 @@ export default function Input({
           rows={6}
           value={value}
           onChange={onChange}
+          disabled={disabled}
           className="
             text-foreground font-thin text-xs font-Roboto
             bg-transparent flex-grow focus:outline-none
@@ -37,6 +39,7 @@ export default function Input({
           type={Type.toLowerCase()}
           value={value}
           onChange={onChange}
+          disabled={disabled}
           className="
             text-foreground font-thin text-xs font-Roboto
             bg-transparent flex-grow focus:outline-none
