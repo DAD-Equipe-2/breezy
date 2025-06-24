@@ -14,4 +14,5 @@ export async function getCurrentUser() {
       console.error('Error using Axios:', error);
     });
   }
+  return localStorage.getItem('currentUser');
 }
