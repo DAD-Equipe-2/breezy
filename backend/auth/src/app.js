@@ -5,9 +5,11 @@ const swagger      = require('./utils/swagger');
 
 const authRoutes   = require('./routes/auth.route');
 
-const app  = express();
+
+const app = express();
 
 
+// Middlewares
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -18,14 +20,13 @@ var corsOptions = {
 };
 app.use(cors(corsOptions));
 
+
 // Swagger docs
 swagger.setupSwagger(app);
 
+
 // Routes
-authRoutes.register(app);
-authRoutes.login(app);
-authRoutes.verify(app);
-authRoutes.renew(app);
+app.use('/', authRoutes);
 
 
 module.exports = app;

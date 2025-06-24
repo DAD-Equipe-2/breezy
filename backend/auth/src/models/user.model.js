@@ -7,10 +7,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true, 
         unique: true,
+        minlength: 3,
+        maxlength: 30,
     },
     password: {
         type: String,
         required: true,
+        maxlength: 100,
     },
     role: {
         type: String,
@@ -21,7 +24,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null,
     }
-});
+}, {timestamps: true});
 
 userSchema.pre('save', async function () {
     if (this.isModified('password')) {

@@ -96,8 +96,11 @@ exports.login = async (req, res) => {
 
 
 exports.verify = async (req, res) => {
-    return res.status(200).json({ message: 'Token is valid' });
-}
+    // Set headers for user information
+    res.set('X-User-Name', req.user.username);
+    res.set('X-User-Role', req.user.role);
+    return res.sendStatus(204);
+};
 
 
 exports.renewToken = async (req, res) => {
@@ -127,6 +130,20 @@ exports.renewToken = async (req, res) => {
             message: 'Access token renewed',
             accessToken_expiresIn: oneHourMs
         });
+    }
+    catch (error) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+exports.delete = async (req, res) => {
+    const username = req.headers['x-user-name'];
+    try {
+        // Find the user by username and delete
+        const user = await User.findOneAndDelete({ username: username });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        return res.status(200).json({ message: 'User deleted successfully' });
     }
     catch (error) {
         return res.status(500).json({ message: 'Internal server error' });

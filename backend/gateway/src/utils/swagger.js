@@ -4,13 +4,13 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerDefinition = {
     openapi: '3.0.0',
     info: {
-        title: 'Auth Service API',
+        title: 'Gateway Service API',
         version: '1.0.0',
-        description: 'Authentication service',
+        description: 'Gateway service',
     },
     servers: [
         {
-            url: 'http://localhost:8080/api/v1/auth',
+            url: 'http://localhost:8080/api/v1/gateway',
         },
     ],
 };

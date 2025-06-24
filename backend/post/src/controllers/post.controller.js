@@ -1,4 +1,4 @@
-const Post = require('../models/Post');
+const Post = require('../models/post.model');
 
 const axios = require('axios');
 const USER_SVC = process.env.USER_SVC_URL || 'http://user-service:3000/api/v1/user';
