@@ -113,3 +113,31 @@ exports.updateAvatar = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+
+exports.getUsersByIds = async (req, res) => {
+    const userIds = req.body.ids;
+
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+        return res.status(400).json({ message: 'Invalid user IDs' });
+    }
+
+    try {
+        const users = await User.find({ _id: { $in: userIds } })
+            .select('-_id username nickname')
+            .lean();
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'No users found' });
+        }
+
+        const enrichedUsers = users.map(user => ({
+            ...user,
+            avatarUrl: `/${user.username}/avatar`
+        }));
+
+        return res.status(200).json(enrichedUsers);
+    } catch (err) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}

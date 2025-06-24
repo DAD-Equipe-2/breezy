@@ -2,6 +2,7 @@ const express               = require('express');
 const accountController     = require('../controllers/account.controller');
 const followController      = require('../controllers/follow.controller');
 const multer                = require('multer');
+const { requireBodyParams } = require('../middlewares/params.middleware');
 
 
 const router = express.Router();
@@ -254,6 +255,31 @@ router.get('/:username', accountController.getUser);
  *         description: Internal server error  
 */
 router.get('/:username/avatar', accountController.getAvatar);
+
+/**
+* @swagger
+* /batch:
+*   get:
+*     summary: Get users by their IDs
+*     tags: [🔒 Internal]
+*     security:
+*       - cookieAuth: []
+*     parameters:
+*       - in: query
+*         name: ids
+*         required: true
+*         description: Comma-separated list of user IDs to retrieve
+*         schema:
+*           type: string
+*     responses:
+*       200:
+*         description: Users retrieved successfully
+*       400:
+*         description: Bad request, invalid or missing IDs parameter
+*       500:
+*         description: Internal server error
+*/
+router.get('/batch', requireBodyParams('ids'), accountController.getUsersByIds);
 
 /**
  * @swagger
