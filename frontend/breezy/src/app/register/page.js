@@ -49,8 +49,7 @@ export default function Register() {
       }
       setLoading(true);
       try {
-        await registerUser({username, email : nickname, password});
-        await registerUserAuth({username, password});
+        await registerUserAuth({username, password, nickname});
 
         router.push("/login?registered=true");
       } catch (err) {

@@ -36,35 +36,23 @@ export async function registerUser({ username, email, password }) {
   return true;
 }
 
-export async function registerUserAuth({ username, password }) {
+export async function registerUserAuth({ username, password, nickname }) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`, 
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/gateway/register`, 
   {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      
     },
-    body: JSON.stringify({ username, password }),
+    withCredentials: true,
+    credentials: 'include',
+    body: JSON.stringify({ username, password, nickname }),
   });
 
   if (!res.ok) {
     const errorData = await res.json();
     throw new Error(errorData.error || "Failed to register");
-  }
-
-  return true;
-}
-
-export async function profileCreateOrUpdate(user) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(user),
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.error || 'Failed to create or update profile');
   }
 
   return true;
