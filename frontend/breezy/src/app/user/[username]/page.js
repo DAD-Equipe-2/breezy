@@ -1,3 +1,5 @@
+"use client";
+
 import Button from "@/components/button";
 import Post from "@/components/post";
 import BackButton from "@/components/return";
@@ -5,10 +7,58 @@ import { FaCalendar, FaSearch } from "react-icons/fa";
 import Footer from "@/components/footer";
 import { GiFeather } from "react-icons/gi";
 import Link from "next/link";
+import { getUserByUsername, getNumberOfFollowersAndFollowingByUsername } from "@/utils/user";
+import { use, useEffect, useState } from "react";
+import { useParams } from 'next/navigation';
 
-export default async function UserProfile({ params }) {
-  const { username } = await params;
-  const isMyProfile = false; // TODO : call the API to check if the profile belongs to the logged-in user
+export default function UserProfile({ params }) {
+  const { username } = useParams();
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  const [followers, setFollowers] = useState(0);
+  const [following, setFollowing] = useState(0);
+
+  useEffect(() => {
+    Promise.all([
+      getUserByUsername(username),
+      getNumberOfFollowersAndFollowingByUsername(username)
+    ])
+    .then(([user, numbers]) => {
+      if (!user) {
+        setError("Utilisateur non trouvé.");
+        return;
+      }
+      setUser(user);
+      setFollowers(numbers.followers);
+      setFollowing(numbers.following);
+    })
+    .catch(err => {
+      console.error(err);
+      setError("Erreur lors de la récupération des données.");
+    });
+  }, [username]);
+
+  if (error) {
+    return (
+      <div className="p-4">
+        <BackButton />
+        <p className="mt-4 text-red-500 font-bold">{error}</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 p-4">
+        {/* Spinner SVG */}
+        <svg className="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        </svg>
+        <p className="text-lg text-gray-500">Chargement…</p>
+      </div>
+    );
+  }
 
   return (
     <div className="pb-20">
@@ -23,17 +73,17 @@ export default async function UserProfile({ params }) {
               alt="Profile Picture"
               className="w-24 h-24 rounded-full mb-4"
             />
-            <p className="text-2xl font-bold">{username}</p>
-            <p className="text-l font-italic">@{username}</p>
+            <p className="text-2xl font-bold">{user.username}</p>
+            <p className="text-l font-italic">@{user.nickname}</p>
             <br></br>
-            <p className="text-sm text-foreground text-opacity-70">Bio: This is a sample bio for {username}.</p>
+            <p className="text-sm text-foreground text-opacity-70">{user.bio ? user.bio : "No bio provided"}</p>
             <div className="flex">
               <FaCalendar className="text-200 mr-2" />
               <p className="text-sm text-foreground text-opacity-30">Joined: January 2023</p>
             </div>
             <div className="flex space-x-2 mt-2">
-              <p className="text-sm text-foreground text-opacity-70">217 followings</p>
-              <p className="text-sm text-foreground text-opacity-70">120 followers</p>
+              <p className="text-sm text-foreground text-opacity-70">{following} followings</p>
+              <p className="text-sm text-foreground text-opacity-70">{followers} followers</p>
             </div>
           </div>
           <Button text="Edit profile" textFondSize="text-sm" paddingX="px-4"></Button>

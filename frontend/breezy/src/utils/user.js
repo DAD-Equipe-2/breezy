@@ -15,3 +15,41 @@ export async function getCurrentUser() {
     });
   }
 }
+
+export async function getUserByUsername(username) {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}`, {
+      withCredentials: true
+    });
+    if (response.status == 404) {
+      return null;
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user by username:', error);
+    throw error;
+  }
+}
+
+export async function getNumberOfFollowersAndFollowingByUsername(username) {
+  let numbers = {followers : 0, following : 0};
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/followers`, {
+      withCredentials: true
+    });
+    numbers.followers = response.data.length;
+  } catch (error) {
+    console.error('Error fetching followers and following:', error);
+    throw error;
+  }
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/following`, {
+      withCredentials: true
+    });
+    numbers.following = response.data.length;
+  } catch (error) {
+    console.error('Error fetching following:', error);
+    throw error;
+  }
+  return numbers;
+}
