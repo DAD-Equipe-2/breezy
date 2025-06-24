@@ -56,3 +56,7 @@ export async function getNumberOfFollowersAndFollowingByUsername(username) {
   }
   return numbers;
 }
+
+export function getUserProfilePictureUrl(username) {
+  return `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/avatar`
+}

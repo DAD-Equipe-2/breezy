@@ -7,7 +7,7 @@ import { FaCalendar, FaSearch } from "react-icons/fa";
 import Footer from "@/components/footer";
 import { GiFeather } from "react-icons/gi";
 import Link from "next/link";
-import { getUserByUsername, getNumberOfFollowersAndFollowingByUsername } from "@/utils/user";
+import { getUserByUsername, getNumberOfFollowersAndFollowingByUsername, getUserProfilePictureUrl } from "@/utils/user";
 import { use, useEffect, useState } from "react";
 import { useParams } from 'next/navigation';
 
@@ -69,7 +69,7 @@ export default function UserProfile({ params }) {
         <div className="flex items-start justify-between mb-4">
           <div className="flex flex-col">
             <img
-              src="/profil_picture.jpg"
+              src={getUserProfilePictureUrl(user.username)}
               alt="Profile Picture"
               className="w-24 h-24 rounded-full mb-4"
             />
