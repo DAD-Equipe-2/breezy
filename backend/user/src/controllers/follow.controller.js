@@ -1,5 +1,7 @@
 const User = require('../models/user.model');
 
+const SERVICE_URL = 'http://localhost:8080/api/v1/users';
+
 
 exports.getFollowers = async (req, res) => {
     const username = req.params.username || req.headers['x-user-name'];
@@ -14,7 +16,7 @@ exports.getFollowers = async (req, res) => {
             return {
                 username: follower.username,
                 nickname: follower.nickname,
-                avatarUrl: `/${follower.username}/avatar`
+                avatarUrl: `${SERVICE_URL}/${follower.username}/avatar`
             };
         });
 
@@ -38,7 +40,7 @@ exports.getFollowing = async (req, res) => {
             return {
                 username: followed.username,
                 nickname: followed.nickname,
-                avatarUrl: `/${followed.username}/avatar`
+                avatarUrl: `${SERVICE_URL}/${followed.username}/avatar`
             };
         });
 
