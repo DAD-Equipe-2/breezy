@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { likePost, unlikePost } from "@/utils/post";
+import Link from "next/link";
 
 export default function Post({ 
   user,
