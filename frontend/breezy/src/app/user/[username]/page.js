@@ -98,7 +98,7 @@ export default function UserProfile({ params }) {
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full">
             <img
               src={getUserProfilePictureUrl(user.username)}
               alt="Profile Picture"
@@ -111,7 +111,7 @@ export default function UserProfile({ params }) {
             <p className="text-2xl font-bold">{user.username}</p>
             <p className="text-l font-italic">@{user.nickname}</p>
             <br></br>
-            <p className="text-sm text-foreground text-opacity-70">{user.bio ? user.bio : "No bio provided"}</p>
+            <p className="text-sm text-foreground text-opacity-70 w-full w-full break-words leading-relaxed ">{user.bio ? user.bio : "No bio provided"}</p>
             <div className="flex">
               <FaCalendar className="text-200 mr-2" />
               <p className="text-sm text-foreground text-opacity-30">

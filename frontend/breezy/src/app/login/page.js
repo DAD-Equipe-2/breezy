@@ -21,6 +21,7 @@ export default function Login() {
   }, []);
 
   const handleLogin = async () => {
+    setRegistered(null);
     setError("");
     if (!username || !password) {
       setError("Please complete all fields.");
