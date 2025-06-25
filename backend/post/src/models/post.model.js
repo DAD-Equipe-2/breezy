@@ -16,6 +16,10 @@ const PostSchema = new mongoose.Schema({
         default: null
     },
     likes: [String],
+    comments: {
+        type: Number,
+        default: 0
+    },
     createdAt: { 
         type: Date, 
         default: Date.now 

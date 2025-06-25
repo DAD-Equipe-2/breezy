@@ -15,6 +15,12 @@ exports.createPost = async (req, res) => {
             return res.status(400).json({ message: 'Content must be under 280 characters.' });
         }
         const post = await Post.create({ author, content, parent });
+
+        // If the post is a comment, increment the comments count of the parent post
+        if (parent) {
+            await Post.findByIdAndUpdate(parent, { $inc: { comments: 1 } });
+        }
+
         return res.status(201).json(post);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -37,7 +43,7 @@ exports.getPost = async (req, res) => {
             });
             return res.status(200).json({ ...post._doc, author: resp.data[0] });
         } catch (err) {
-            return res.status(500).json({ message: 'Failed to fetch author details' });
+            return res.status(200).json({ ...post._doc, message: 'Failed to fetch author details' });
         }
     } catch (err) {
         return res.status(500).json({ message: err.message });
@@ -72,6 +78,12 @@ exports.deletePost = async (req, res) => {
     try {
         const post = await Post.findOneAndDelete({ _id: req.params.postId, author: username });
         if (!post) return res.status(404).json({ message: 'Post not found' });
+
+        // If the post is a comment, decrement the comments count of the parent post
+        if (post.parent) {
+            await Post.findByIdAndUpdate(post.parent, { $inc: { comments: -1 } });
+        }
+
         return res.status(200).json({ message: 'Post deleted successfully' });
     } catch (err) {
         return res.status(500).json({ message: err.message });
@@ -88,7 +100,9 @@ exports.getPostsByUser = async (req, res) => {
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(10);
-        
+
+        if (posts.length === 0) return res.status(404).json({ message: 'No posts found for this user' });
+
         // Get author details from user service
         try {
             const resp = await axios.get(`${USER_SERVICE}/batch`, {
@@ -100,7 +114,7 @@ exports.getPostsByUser = async (req, res) => {
             // Post is an array with posts and numbers of posts, I wanna set the author for each post
             return res.status(200).json({ posts, author: resp.data[0] });
         } catch (err) {
-            return res.status(500).json({ message: 'Failed to fetch author details' });
+            return res.status(200).json({ posts, message: 'Failed to fetch author details' });
         }
     } catch (err) {
         return res.status(500).json({ message: err.message });
@@ -138,7 +152,7 @@ exports.getFeed = async (req, res) => {
             });
             return res.status(200).json(feed);
         } catch (err) {
-            return res.status(500).json({ message: 'Failed to fetch author details', error: err.message });
+            return res.status(200).json({ feed, message: 'Failed to fetch author details' });
         }
     } catch (err) {
         return res.status(500).json({ message: err.message });
