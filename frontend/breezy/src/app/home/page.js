@@ -69,17 +69,19 @@ export default function HomePage() {
         {posts && posts.length > 0 ? (
           posts.map((post) => (
             <Post
-              key={post._id}
+              key={post.id}
+              idPost={post._id}
+              currentUser={currentUser}
               user={{
-                username: post.author,
-                pseudo: "jsp",
-                profilePicture: "jsp",
+                username: post.author.username,
+                pseudo: post.author.nickname,
+                profilePicture: post.author.avatarUrl,
               }}
               date={new Date(post.createdAt).toLocaleDateString("fr-FR", {
                 month: "long", day: "numeric", year: "numeric"
               })}
               content={post.content}
-              likes={post.likes.length}
+              likes={post.likes}
               comments={post.comments.length}
             />
           ))

@@ -165,6 +165,7 @@ export default function UserProfile({ params }) {
             {posts && posts.posts && posts.posts.length > 0 ? (
               posts.posts.map((post) => (
                 <Post
+                  key={post.id}
                   idPost={post._id}
                   currentUser={currentUser}
                   user={{

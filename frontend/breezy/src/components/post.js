@@ -20,10 +20,8 @@ export default function Post({
 
   // Met à jour liked quand currentUser ou likes changent
   useEffect(() => {
-    if (currentUser) {
-      const isLiked = likes.includes(currentUser);
-      setPostInfo({ liked: isLiked });
-    }
+    const isLiked = likes.includes(currentUser);
+    setPostInfo({ liked: isLiked });
   }, [currentUser, likes]);
 
    const toggleLike = async () => {
