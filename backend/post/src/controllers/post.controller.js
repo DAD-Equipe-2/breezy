@@ -8,7 +8,7 @@ const USER_SERVICE = 'http://user-service:3000';
 exports.createPost = async (req, res) => {
     const author = req.headers['x-user-name'];
     const { content } = req.body;
-    const parent = req.params.parent || null;
+    const parent = req.params.postId || null;
 
     try {
         if (content.length > 280) {
