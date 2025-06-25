@@ -28,7 +28,6 @@ exports.createUser = async (req, res) => {
 exports.getUser = async (req, res) => {
     const username = req.params.username || req.headers['x-user-name'];
 
-    console.info('Fetching user:', username);
     try {
         const user = await User.findOne({ username: username })
         .select('-_id username nickname bio createdAt');
@@ -96,7 +95,6 @@ exports.getAvatar = async (req, res) => {
         res.set('Content-Type', user.avatar.contentType);
         return res.send(user.avatar.data);
     } catch (err) {
-        console.error('Error fetching avatar:', err);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
