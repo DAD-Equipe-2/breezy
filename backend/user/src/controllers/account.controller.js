@@ -1,5 +1,7 @@
 const User = require('../models/user.model');
 
+const SERVICE_URL = 'http://localhost:8080/api/v1/users';
+
 
 exports.createUser = async (req, res) => {
     const { nickname } = req.body;
@@ -25,6 +27,8 @@ exports.createUser = async (req, res) => {
 
 exports.getUser = async (req, res) => {
     const username = req.params.username || req.headers['x-user-name'];
+
+    console.info('Fetching user:', username);
     try {
         const user = await User.findOne({ username: username })
         .select('-_id username nickname bio createdAt');
@@ -115,15 +119,20 @@ exports.updateAvatar = async (req, res) => {
 };
 
 
-exports.getUsersByIds = async (req, res) => {
-    const userIds = req.body.ids;
-
-    if (!Array.isArray(userIds) || userIds.length === 0) {
-        return res.status(400).json({ message: 'Invalid user IDs' });
-    }
-
+exports.getUsersByUsernames = async (req, res) => {
+    let usernames = req.query.usernames;
+    
     try {
-        const users = await User.find({ _id: { $in: userIds } })
+        // Convert usernames to an array if it's a string
+        if (typeof usernames === 'string') {
+            usernames = usernames.split(',').map(name => name.trim());
+        }
+
+        if (!Array.isArray(usernames) || usernames.length === 0) {
+            return res.status(400).json({ message: 'Invalid usernames' });
+        }
+    
+        const users = await User.find({ username: { $in: usernames } })
             .select('-_id username nickname')
             .lean();
 
@@ -133,7 +142,7 @@ exports.getUsersByIds = async (req, res) => {
 
         const enrichedUsers = users.map(user => ({
             ...user,
-            avatarUrl: `/${user.username}/avatar`
+            avatarUrl: `${SERVICE_URL}/${user.username}/avatar`
         }));
 
         return res.status(200).json(enrichedUsers);

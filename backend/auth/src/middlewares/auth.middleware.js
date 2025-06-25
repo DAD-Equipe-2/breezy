@@ -22,7 +22,7 @@ function authenticateJWT(key, type = 'access') {
 
                 // Check if the user exists in the database
                 const user = await User.findOne({ username: decoded.username });
-                if (!user) return res.status(404).json({ message: 'User not found' });
+                if (!user) return res.status(403).json({ message: 'User not found' });
 
                 req.user = decoded;
                 req.token = token;

@@ -9,81 +9,286 @@ const router = express.Router();
  * @swagger
  * tags:
  *   - name: Posts
- *     description: Posts related endpoints
+ *     description: Core post endpoints
+ *   - name: User
+ *     description: User-scoped post endpoints
+ *   - name: Likes
+ *     description: Like endpoints for posts
+ *   - name: Comments
+ *     description: Comment and reply endpoints for posts
  *   - name: 🔒 Internal
  *     description: Internal endpoints for user service
 */
 
-router.post('/', postController.createPost);
-router.get('/', postController.listPosts);
-router.get('/:id', postController.getPost);
+/**
+ * @swagger
+ * /me:
+ *   get:
+ *     summary: Get all posts by the authenticated user
+ *     tags: [User]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       '200':
+ *         description: Posts retrieved successfully
+ *       '500':
+ *         description: Internal server error
+ */
+router.get('/me', postController.getPostsByUser);
 
-router.get('/user/:userId', postController.getPostsByUser);
-router.get('/feed/:userId', postController.getFeed);
+/**
+ * @swagger
+ * /user/{username}:
+ *   get:
+ *     summary: Get all posts by a specific user
+ *     tags: [User]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       '200':
+ *         description: Posts retrieved successfully
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+*/
+router.get('/user/:username', postController.getPostsByUser);
 
-router.post('/:id/like', postController.likePost);
-router.delete('/:id/like', postController.unlikePost);
-router.get('/:id/like/:userId', postController.checkLike);
+/**
+ * @swagger
+ * /feed:
+ *   get:
+ *     summary: Get posts from users I follow
+ *     tags: [User]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       '200':
+ *         description: Posts retrieved successfully
+ *       '404':
+ *         description: No posts found
+ *       '500':
+ *         description: Internal server error
+*/
+router.get('/feed', postController.getFeed);
 
-router.post('/:id/comment', postController.addComment);
-router.get('/:id/comments', postController.getComments);
+
+/**
+ * @swagger
+ * /{postId}/like:
+ *   post:
+ *     summary: Like a post
+ *     tags: [Likes]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       '200':
+ *         description: Post liked successfully
+ *       '404':
+ *         description: Post not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.post('/:postId/like', postController.likePost);
+
+/**
+ * @swagger
+ * /{postId}/like:
+ *   delete:
+ *     summary: Unlike a post
+ *     tags: [Likes]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       '200':
+ *         description: Post unliked successfully
+ *       '404':
+ *         description: Post not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.delete('/:postId/like', postController.unlikePost);
+
+
+/**
+ * @swagger
+ * /{postId}/comments:
+ *   post:
+ *     summary: Add a comment to a post
+ *     tags: [Comments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 description: The content of the comment
+ *     responses:
+ *       '201':
+ *         description: Comment created successfully
+ *       '400':
+ *         description: Bad request, content is required
+ *       '404':
+ *         description: Post not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.post('/:postId/comments', requireBodyParams('content'), postController.createPost);
+
+/**
+ * @swagger
+ * /{postId}/comments:
+ *  get:
+ *    summary: Get all comments for a post
+ *    tags: [Comments]
+ *    security:
+ *      - cookieAuth: []
+ *    parameters:
+ *      - in: path
+ *        name: postId
+ *        required: true
+ *        description: The ID of the post to retrieve comments for
+ *        schema:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: Comments retrieved successfully
+ *      '404':
+ *        description: Post not found
+ *      '500':
+ *        description: Internal server error
+ */
+router.get('/:postId/comments', postController.getComments);
+
+
+/**
+ * @swagger
+ * /:
+ *   post:
+ *     summary: Create a new post
+ *     tags: [Posts]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 description: The content of the post (max 280 characters)
+ *               parent:
+ *                 type: string
+ *                 description: The ID of the parent post if this is a reply
+ *     responses:
+ *       '201':
+ *         description: Post created successfully
+ *       '400':
+ *         description: Bad request, content is required or exceeds 280 characters
+ *       '500':
+ *         description: Internal server error
+*/
+router.post('/', requireBodyParams('content'), postController.createPost);
+
+/**
+ * @swagger
+ * /{postId}:
+ *   get:
+ *     summary: Get a post by ID
+ *     tags: [Posts]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         description: The ID of the post to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Post retrieved successfully
+ *       '404':
+ *         description: Post not found
+ *       '500':
+ *         description: Internal server error
+*/
+router.get('/:postId', postController.getPost);
+
+/**
+ * @swagger
+ * /{postId}:
+ *   patch:
+ *     summary: Update a post by ID
+ *     tags: [Posts]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         description: The ID of the post to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 description: The new content of the post (max 280 characters)
+ *     responses:
+ *       '200':
+ *         description: Post updated successfully
+ *       '400':
+ *         description: Bad request, content is required or exceeds 280 characters
+ *       '404':
+ *         description: Post not found
+ *       '500':
+ *         description: Internal server error
+*/
+router.patch('/:postId', requireBodyParams('content'), postController.updatePost);
+
+/**
+ * @swagger
+ * /{postId}:
+ *   delete:
+ *     summary: Delete a post by ID
+ *     tags: [Posts]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         description: The ID of the post to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Post deleted successfully
+ *       '404':
+ *         description: Post not found
+ *       '500':
+ *         description: Internal server error
+*/
+router.delete('/:postId', postController.deletePost);
 
 
 module.exports = router;
-
-
-/*
-
-Core Post Endpoints
-
-| Method   | Endpoint            | Description                                  |
-| -------- | ------------------- | -------------------------------------------- |
-| `POST`   | `/api/v1/posts`     | Create a new post (auth required)            |
-| `GET`    | `/api/v1/posts/:id` | Get a post by ID                             |
-| `PUT`    | `/api/v1/posts/:id` | Update an existing post (author only)        |
-| `PATCH`  | `/api/v1/posts/:id` | Partially update a post (e.g., content only) |
-| `DELETE` | `/api/v1/posts/:id` | Delete a post (author only)                  |
-
----
-
-User-Scoped Post Endpoints
-
-| Method | Endpoint                     | Description                                                     |
-| ------ | ---------------------------- | --------------------------------------------------------------- |
-| `GET`  | `/api/v1/posts/me`           | Get all posts by authenticated user                             |
-| `GET`  | `/api/v1/posts/user/:userId` | Get all posts by a specific user                                |
-| `GET`  | `/api/v1/posts/feed`         | Get posts from users I follow (requires data from User Service) |
-
----
-
-Like Endpoints
-
-| Method   | Endpoint                  | Description                  |
-| -------- | ------------------------- | ---------------------------- |
-| `POST`   | `/api/v1/posts/:id/like`  | Like a post                  |
-| `DELETE` | `/api/v1/posts/:id/like`  | Unlike a post                |
-| `GET`    | `/api/v1/posts/:id/likes` | Get users who liked the post |
-
----
-
-Comment & Reply Endpoints
-
-| Method   | Endpoint                              | Description                                |
-| -------- | ------------------------------------- | ------------------------------------------ |
-| `POST`   | `/api/v1/posts/:id/comments`          | Add a comment to a post                    |
-| `GET`    | `/api/v1/posts/:id/comments`          | Get all comments for a post                |
-| `POST`   | `/api/v1/comments/:commentId/reply`   | Reply to a comment (threaded reply)        |
-| `GET`    | `/api/v1/comments/:commentId/replies` | Get replies to a specific comment          |
-| `PUT`    | `/api/v1/comments/:commentId`         | Edit a comment or reply (owner only)       |
-| `DELETE` | `/api/v1/comments/:commentId`         | Delete a comment or reply (owner or admin) |
-
----
-
-Cross-Service & Supporting Endpoints
-
-| Method | Endpoint                     | Description                                    |
-| ------ | ---------------------------- | ---------------------------------------------- |
-| `GET`  | `/api/v1/users/me/following` | Get list of users I'm following (User Service) |
-| `GET`  | `/api/v1/users/:id/avatar`   | Get avatar of a user (Media Service)           |
-| `GET`  | `/api/v1/users/:id/profile`  | Get profile info (username, nickname, etc.)    |
-*/

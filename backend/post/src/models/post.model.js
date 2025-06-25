@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const PostSchema = new mongoose.Schema({
     author: { 
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: true,
     },
     content: {
@@ -10,15 +10,12 @@ const PostSchema = new mongoose.Schema({
         required: true,
         maxlength: 280
     },
-    likes: [{
+    parent: {
         type: mongoose.Schema.Types.ObjectId,
-    }],
-    comments: [{
-        type: { 
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Comment'
-        }
-    }],
+        ref: 'Post',
+        default: null
+    },
+    likes: [String],
     createdAt: { 
         type: Date, 
         default: Date.now 

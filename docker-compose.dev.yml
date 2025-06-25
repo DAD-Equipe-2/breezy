@@ -15,7 +15,6 @@ services:
       - gateway-service
       - auth-service
       - user-service
-      # - profile-service
       - post-service
       # - message-service
   
@@ -97,32 +96,6 @@ services:
     networks:
       - app-network
 
-  # -- PROFILE SERVICE --
-  # profile-service:
-  #   build:
-  #     context: ./backend/profile
-  #     dockerfile: Dockerfile.dev
-  #   restart: always
-  #   container_name: breezy-profile-service
-  #   environment:
-  #     - MONGO_URI=mongodb://profile-mongo:27017/profile
-  #   volumes:
-  #     - ./backend/profile:/app         # Mount local source code into container (remove for production)
-  #     - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     - profile-mongo
-
-  # profile-mongo:
-  #   image: mongo:latest
-  #   restart: always
-  #   container_name: breezy-profile-mongo
-  #   volumes:
-  #     - profile-mongo-data:/data/db
-  #   networks:
-  #     - app-network
-
   # -- POST SERVICE --
   post-service:
     build:
@@ -178,7 +151,6 @@ services:
 volumes:
   auth-mongo-data:
   user-mongo-data:
-  # profile-mongo-data:
   post-mongo-data:
   # message-mongo-data:
 
