@@ -96,7 +96,7 @@ exports.getPostsByUser = async (req, res) => {
     const skip     = parseInt(req.query.skip) || 0;
 
     try {
-        const posts = await Post.find({ author: username })
+        const posts = await Post.find({ author: username, parent: null })
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(10);
