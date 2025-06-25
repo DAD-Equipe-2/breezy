@@ -16,6 +16,7 @@ export default function EditProfilePage() {
   });
   const [nickname, setNickname] = useState("");
   const [bio, setBio] = useState("");
+  const [profilePictureUrl, setProfilePictureUrl] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -29,6 +30,7 @@ export default function EditProfilePage() {
         bio: data.bio,
         createdAt: data.createdAt
       });
+      setProfilePictureUrl(getUserProfilePictureUrl(data.username)+ `?t=${Date.now()}`);
       setNickname(data.nickname);
       setBio(data.bio);
     } catch (error) {
@@ -40,9 +42,8 @@ export default function EditProfilePage() {
   }, []);
 
 
-  const handlePictureChange = (event) => {
+  const handlePictureChange = async (event) => {
   const file = event.target.files[0];
-
   if (!file) return;
 
   const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -51,14 +52,15 @@ export default function EditProfilePage() {
     return;
   }
 
-  uploadProfilePicture(file)
-    .then(() => {
-      console.log("Upload réussi !");r
-    })
-    .catch((error) => {
-      console.error("Erreur d'upload :", error);
-    });
+  try {
+    await uploadProfilePicture(file);
+    setProfilePictureUrl(getUserProfilePictureUrl(userData.username) + `?t=${Date.now()}`);
+    console.log("Upload réussi !");
+  } catch (error) {
+    console.error("Erreur d'upload :", error);
+  }
   };
+
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
@@ -101,7 +103,7 @@ export default function EditProfilePage() {
       {/* Profile Picture */}
       <div className="flex flex-col items-center space-y-2 mb-6 w-full max-w-3xl">
           <img
-            src={getUserProfilePictureUrl(userData.username)}
+            src={profilePictureUrl || "/profil_picture.jpg"}
             alt="Profile"
             className="w-28 h-28 rounded-full object-cover"
             onError={(e) => {
