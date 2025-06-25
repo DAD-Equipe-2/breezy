@@ -58,6 +58,33 @@ export async function getNumberOfFollowersAndFollowingByUsername(username) {
   return numbers;
 }
 
+/**
+ * Recherche des utilisateurs par username partiel.
+ * @param {string} username
+ * @returns {Promise<Array<{ username: string; nickname: string; avatarUrl: string }>>}
+ */
+export async function searchUsers(username) {
+  const text = username?.trim();
+  if (!text) {
+    return [];
+  }
+
+  try {
+    const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/search`,
+        {
+          params: { username: text },
+          withCredentials: true
+        }
+    );
+    // response.data doit être un tableau d’objets { username, nickname, avatarUrl }
+    return response.data;
+  } catch (error) {
+    console.error('Error searching users:', error);
+    return [];
+  }
+}
+
 export function getUserProfilePictureUrl(username) {
   return `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/avatar`
 }
