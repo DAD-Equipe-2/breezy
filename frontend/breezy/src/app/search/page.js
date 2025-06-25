@@ -1,66 +1,98 @@
-"use client";
-import { useState, useEffect } from 'react';
+'use client';
+import { useState } from 'react';
 import axios from 'axios';
-import SearchBar from '@/components/SearchBar'; // Assure-toi que le chemin est correct
+import Link from 'next/link';
+import SearchBar from '@/components/SearchBar';
 import Return from '@/components/Return';
-import Post from '@/components/Post';
 import Footer from '@/components/Footer';
+import { searchUsers } from '@/utils/user'; // adapte le chemin
 
 export default function Search() {
-    const [query, setQuery] = useState('');
+    const [query, setQuery]     = useState('');
     const [results, setResults] = useState([]);
 
-    const BACKEND = process.env.NEXT_PUBLIC_API_BASE_URL;
-
     const handleSearch = async (q) => {
-        const text = q.trim();
-        if (!text) {
-            setResults([]);
-            return;
-        }
-
-        try {
-            const res = await axios.get(
-                `${BACKEND}/users/search?username=${encodeURIComponent(text)}`,
-                {
-                    withCredentials: true,}
-            );
-            setResults(res.data);
-        } catch (err) {
-            // si pas trouvé (404) ou autre, on vide le tableau
-            setResults([]);
-            console.error("Erreur recherche frontend :", err.response?.status);
-        }
+        const users = await searchUsers(q);
+        setResults(users);
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-background text-foreground py-4 w-full pb-20">
+        <div className="flex flex-col min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] py-4 w-full pb-20">
+            {/* Barre de retour + recherche */}
             <div className="flex items-center justify-start mb-3 px-4 gap-4">
                 <Return />
                 <SearchBar
                     placeholder="Search @people"
                     width="w-full"
-                    rounded={true}
+                    rounded
                     query={query}
                     setQuery={setQuery}
                     handleSearch={() => handleSearch(query)}
+                    inputClassName="
+            bg-[var(--color-background)]
+            border
+            border-[var(--color-quinary)]
+            text-[var(--color-foreground)]
+            placeholder-[var(--color-secondary)]
+            focus:outline-none
+          "
+                    buttonClassName="
+            bg-[var(--color-primary)]
+            hover:bg-[var(--color-tertiary)]
+            text-[var(--color-background)]
+          "
                 />
             </div>
 
+            {/* Résultats */}
             <div className="flex flex-col px-4 gap-4">
                 {results.length > 0 ? (
                     results.map((user) => (
-                        <div key={user._id} className="p-4 border rounded bg-white shadow">
-                            <p className="font-bold">{user.username}</p>
-                            <p className="text-sm text-gray-500">{user.bio || 'Aucune biographie disponible.'}</p>
-                        </div>
+                        <Link
+                            key={user.username}
+                            href={`/user/${encodeURIComponent(user.username)}`}
+                            className="
+                block p-4
+                border
+                border-[var(--color-quinary)]
+                rounded
+                bg-[var(--color-background)]
+                shadow-sm
+                hover:bg-[var(--color-quinary)]
+                transition-colors
+              "
+                        >
+                            <div className="flex items-center">
+                                {/* Avatar */}
+                                {user.avatarUrl ? (
+                                    <img
+                                        src={user.avatarUrl}
+                                        alt={user.username}
+                                        className="w-12 h-12 rounded-full mr-4"
+                                    />
+                                ) : (
+                                    <div className="w-12 h-12 bg-[var(--color-quinary)] rounded-full mr-4" />
+                                )}
+
+                                {/* Infos */}
+                                <div>
+                                    <p className="font-bold text-lg text-[var(--color-foreground)]">
+                                        @{user.username}
+                                    </p>
+                                    <p className="text-sm text-[var(--color-secondary)]">
+                                        {user.nickname || 'Pas de pseudo'}
+                                    </p>
+                                </div>
+                            </div>
+                        </Link>
                     ))
                 ) : (
-                    <p className="text-gray-500">Aucun résultat trouvé</p>
+                    <p className="text-[var(--color-secondary)]">Aucun résultat trouvé</p>
                 )}
             </div>
 
-            <div className="flex flex-col fixed bottom-0 inset-x-0 z-20 bg-background w-full">
+            {/* Footer fixe */}
+            <div className="flex flex-col fixed bottom-0 inset-x-0 z-20 bg-[var(--color-background)] w-full">
                 <Footer />
             </div>
         </div>
