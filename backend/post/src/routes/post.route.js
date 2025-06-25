@@ -44,6 +44,13 @@ router.get('/me', postController.getPostsByUser);
  *     tags: [User]
  *     security:
  *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         description: The username of the user to retrieve posts for
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         description: Posts retrieved successfully
@@ -81,6 +88,13 @@ router.get('/feed', postController.getFeed);
  *     tags: [Likes]
  *     security:
  *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         description: The ID of the post to like
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         description: Post liked successfully
@@ -99,6 +113,13 @@ router.post('/:postId/like', postController.likePost);
  *     tags: [Likes]
  *     security:
  *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         description: The ID of the post to unlike
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         description: Post unliked successfully
@@ -118,6 +139,13 @@ router.delete('/:postId/like', postController.unlikePost);
  *     tags: [Comments]
  *     security:
  *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         description: The ID of the post to add a comment to
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
