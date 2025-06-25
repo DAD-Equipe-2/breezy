@@ -104,7 +104,7 @@ exports.followUser = async (req, res) => {
             ),
             User.findOneAndUpdate(
                 { username: targetUsername },
-                { $addToSet: { followers: username } },
+                { $addToSet: { followers: user._id } },
                 { new: true }
             )
         ]);
