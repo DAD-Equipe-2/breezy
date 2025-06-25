@@ -1,5 +1,7 @@
 "use client";
 
+import { getUserProfilePictureUrl } from "@/utils/user";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Post({ 
@@ -13,19 +15,24 @@ export default function Post({
   const [postInfo, setPostInfo] = useState({
     liked: false, // par défaut non liké, tu peux aussi passer en prop si besoin
   });
+  console.log(user);
 
   return (
     <div className="flex post bg-foreground-500 text-primary p-4 rounded-lg border border-foreground shadow-md mb-2">
       <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden">
-        <img
-          src={user.profilePicture}
-          alt="Profil"
-          className="w-full h-full object-cover"
-        />
+        <Link href={`/user/${user.username}`} className="w-full">
+          <img
+            src={getUserProfilePictureUrl(user.username)}
+            alt="Profil"
+            className="w-full h-full object-cover"
+          />
+        </Link>
       </div>
       <div className="flex flex-col ml-1 pr-2 space-y-2">
         <div className="flex whitespace-nowrap space-x-2">
-          <h2 className="text-foreground font-bold text-sm font-roboto">{user.username}</h2>
+          <Link href={`/user/${user.username}`} className="w-full">
+            <h2 className="text-foreground font-bold text-sm font-roboto">{user.username}</h2>
+          </Link>
           <h3 className="text-secondary text-sm font-roboto">{user.pseudo}</h3>
           <p className="text-secondary text-sm font-roboto">{date}</p>
         </div>
