@@ -97,7 +97,7 @@ export default function UserProfile({ params }) {
   }
 
   return (
-    <div className="pb-20">
+    <div className="pb-20 min-h-screen max-w-[100vw]">
       <div className="flex h-[15vh] items-center bg-[#1F1F1F] p-4">
         <BackButton/>
       </div>

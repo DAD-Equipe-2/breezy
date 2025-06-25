@@ -58,7 +58,7 @@ export default function Post({
           />
         </Link>
       </div>
-      <div className="flex flex-col ml-1 pr-2 space-y-2">
+      <div className="flex flex-col ml-1 pr-2 space-y-2 min-w-0">
         <div className="flex whitespace-nowrap space-x-2">
           <Link href={`/user/${user.username}`} className="w-full">
             <h2 className="text-foreground font-bold text-sm font-roboto">{user.username}</h2>
@@ -67,7 +67,9 @@ export default function Post({
           <p className="text-secondary text-sm font-roboto">{date}</p>
         </div>
         <div>
-          <p className="text-secondary text-sm font-roboto">{content}</p>
+          <p className="text-secondary text-sm font-roboto whitespace-pre-wrap break-words">
+            {content}
+          </p>
         </div>
 
         {imageUrl && (
