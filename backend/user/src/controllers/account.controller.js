@@ -113,8 +113,10 @@ exports.updateAvatar = async (req, res) => {
         if (!user) return res.status(404).json({ message: 'User not found' });
 
         // Update the user's avatar
-        user.avatar.data = avatar.buffer;
-        user.avatar.contentType = avatar.mimetype;
+        user.avatar = {
+            data: avatar.buffer,
+            contentType: avatar.mimetype
+        };
 
         await user.save();
         return res.status(200).json({ message: 'Avatar uploaded successfully' });

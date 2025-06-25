@@ -12,7 +12,7 @@ export async function loginUser(username, password) {
         },
       }
     );
-    localStorage.setItem('currentUser', username.toLowerCase());
+    localStorage.setItem('currentUser', username);
     return true;
   } catch (error) {
     const errMsg = error.response?.data || error.message || 'Échec de la requête';
