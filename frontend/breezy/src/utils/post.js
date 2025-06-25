@@ -25,3 +25,32 @@ export async function getPosts(username) {
     return { posts: [] };
   }
 }
+
+// Function to like a post
+export async function likePost(postId) {
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/like`, {}, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error liking post:', error);
+    throw error;
+  }
+}
+
+// Function to unlike a post
+export async function unlikePost(postId) {
+  try {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/unlike`, 
+      {
+        withCredentials: true
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error unliking post:', error);
+    throw error;
+  }
+}

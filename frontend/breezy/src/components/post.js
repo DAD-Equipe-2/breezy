@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Post({ 
-  user, 
+  user,
+  currentUser, 
   date, 
   imageUrl, 
   content, 
@@ -11,8 +12,22 @@ export default function Post({
   comments 
 }) {
   const [postInfo, setPostInfo] = useState({
-    liked: false, // par défaut non liké, tu peux aussi passer en prop si besoin
+    liked: false,
   });
+
+  // Met à jour liked quand currentUser ou likes changent
+  useEffect(() => {
+    if (currentUser) {
+      const isLiked = likes.includes(currentUser);
+      setPostInfo({ liked: isLiked });
+    }
+  }, [currentUser, likes]);
+
+  const toggleLike = () => {
+    setPostInfo((prev) => {
+      return { liked: !prev.liked };
+    });
+  };
 
   return (
     <div className="flex post bg-foreground-500 text-primary p-4 rounded-lg border border-foreground shadow-md mb-2">
@@ -61,8 +76,8 @@ export default function Post({
             </button>
             <p>{comments}</p>
           </div>
-          <div className="flex space-x-1">
-            <button>
+          <div className="flex space-x-1 justify-center items-center">
+            <button onClick={toggleLike} className="cursor-pointer">
               {/* Icône likes */}
               <svg
                 className="text-foreground"
@@ -77,7 +92,7 @@ export default function Post({
                 <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" />
               </svg>
             </button>
-            <p>{likes}</p>
+            <p>{likes.length}</p>
           </div>
         </div>
       </div>

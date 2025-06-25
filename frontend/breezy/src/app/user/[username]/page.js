@@ -175,7 +175,7 @@ export default function UserProfile({ params }) {
                     month: "long", day: "numeric", year: "numeric"
                   })}
                   content={post.content}
-                  likes={post.likes.length}
+                  likes={post.likes}
                   comments={post.comments.length}
                 />
               ))
