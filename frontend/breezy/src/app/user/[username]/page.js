@@ -162,27 +162,28 @@ export default function UserProfile({ params }) {
         <br/>
         <div className="flex flex-col">
           <div className="flex flex-col">
-            {posts.posts && posts.posts.length > 0 ? (
+            {posts && posts.posts && posts.posts.length > 0 ? (
               posts.posts.map((post) => (
                 <Post
                   key={post.id}
                   user={{
-                    username: posts.author.username,       // Utilise l'auteur du post, pas celui du container
-                    pseudo: posts.author.nickname,          // Pareil ici
-                    profilePicture: posts.author.avatarUrl,
+                    username: post.author.username,
+                    pseudo: post.author.nickname,
+                    profilePicture: post.author.avatarUrl,
                   }}
                   date={new Date(post.createdAt).toLocaleDateString("fr-FR", {
-                    month: "long", day: "numeric", year: "numeric" 
+                    month: "long", day: "numeric", year: "numeric"
                   })}
                   content={post.content}
                   likes={post.likes.length}
-                  //comments={post.comments.length}
+                  comments={post.comments.length}
                 />
               ))
             ) : (
-              <p className="text-sm text-muted">Aucun post disponible.</p>
+              <p className="text-sm text-muted mt-4">Aucun post disponible est survenue.</p>
             )}
           </div>
+
         </div>
 
       <div className="flex fixed bottom-25 right-4 z-50">

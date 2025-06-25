@@ -22,7 +22,6 @@ export async function getPosts(username) {
     console.log("Posts fetched:", response.data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching posts:', error);
-    throw error;
+    return { posts: [] };
   }
 }
