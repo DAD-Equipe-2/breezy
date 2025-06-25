@@ -159,7 +159,7 @@ exports.getUsersByUsernames = async (req, res) => {
 
 exports.searchUsers = async (req, res) => {
     const { username } = req.query;
-    if (!username) {
+    if (!username && username !== '') {
         return res.status(400).json({ message: 'Username query parameter is required' });
     }
 
