@@ -37,12 +37,14 @@ export default function UserProfile({ params }) {
         setError("Utilisateur non trouvé.");
         return;
       }
-
+      console.log("User data fetched:", userData);
       setUser(userData);
       setFollowers(numbers.followers);
       setFollowing(numbers.following);
       setCurrentUser(current);
-      setIsFollowingUser(await isFollowing(username));
+      if (userData.username != current) {
+        setIsFollowingUser(await isFollowing(username));
+      }
     } catch (err) {
       console.error(err);
       setError("Erreur lors de la récupération des données.");
@@ -112,7 +114,9 @@ export default function UserProfile({ params }) {
             <p className="text-sm text-foreground text-opacity-70">{user.bio ? user.bio : "No bio provided"}</p>
             <div className="flex">
               <FaCalendar className="text-200 mr-2" />
-              <p className="text-sm text-foreground text-opacity-30">Joined: January 2023</p>
+              <p className="text-sm text-foreground text-opacity-30">
+                Joined {new Date(user.createdAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+              </p>
             </div>
             <div className="flex space-x-2 mt-2">
               <p className="text-sm text-foreground text-opacity-70">{following} followings</p>
