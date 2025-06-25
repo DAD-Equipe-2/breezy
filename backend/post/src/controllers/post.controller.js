@@ -164,8 +164,14 @@ exports.likePost = async (req, res) => {
     const username = req.headers['x-user-name'];
 
     try {
+
+        // Check if the user has already liked the post
+        const existingPost = await Post.findOne({ _id: req.params.postId, likes: username });
+        if (existingPost) return res.status(400).json({ message: 'Post already liked' });
+
+        // If not, add the user to the likes array
         const post = await Post.findByIdAndUpdate(
-            req.params.id,
+            req.params.postId,
             { $addToSet: { likes: username } },
             { new: true }
         );
@@ -180,8 +186,12 @@ exports.unlikePost = async (req, res) => {
     const username = req.headers['x-user-name'];
 
     try {
+        // Check if the user has already liked the post
+        const existingPost = await Post.findOne({ _id: req.params.postId, likes: username });
+        if (!existingPost) return res.status(400).json({ message: 'Post not liked yet' });
+
         const post = await Post.findByIdAndUpdate(
-            req.params.id,
+            req.params.postId,
             { $pull: { likes: username } },
             { new: true }
         );
