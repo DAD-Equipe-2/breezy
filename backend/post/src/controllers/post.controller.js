@@ -8,7 +8,7 @@ const USER_SERVICE = 'http://user-service:3000';
 exports.createPost = async (req, res) => {
     const author = req.headers['x-user-name'];
     const { content } = req.body;
-    const parent = req.params.parent || null;
+    const parent = req.params.postId || null;
 
     try {
         if (content.length > 280) {
@@ -96,7 +96,7 @@ exports.getPostsByUser = async (req, res) => {
     const skip     = parseInt(req.query.skip) || 0;
 
     try {
-        const posts = await Post.find({ author: username })
+        const posts = await Post.find({ author: username, parent: null })
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(10);
@@ -164,8 +164,14 @@ exports.likePost = async (req, res) => {
     const username = req.headers['x-user-name'];
 
     try {
+
+        // Check if the user has already liked the post
+        const existingPost = await Post.findOne({ _id: req.params.postId, likes: username });
+        if (existingPost) return res.status(400).json({ message: 'Post already liked' });
+
+        // If not, add the user to the likes array
         const post = await Post.findByIdAndUpdate(
-            req.params.id,
+            req.params.postId,
             { $addToSet: { likes: username } },
             { new: true }
         );
@@ -180,8 +186,12 @@ exports.unlikePost = async (req, res) => {
     const username = req.headers['x-user-name'];
 
     try {
+        // Check if the user has already liked the post
+        const existingPost = await Post.findOne({ _id: req.params.postId, likes: username });
+        if (!existingPost) return res.status(400).json({ message: 'Post not liked yet' });
+
         const post = await Post.findByIdAndUpdate(
-            req.params.id,
+            req.params.postId,
             { $pull: { likes: username } },
             { new: true }
         );
