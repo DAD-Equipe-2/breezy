@@ -107,3 +107,56 @@ export async function unfollowUser(targetUsername) {
     throw error;
   }
 }
+
+// Function to update user profile
+export async function updateUserProfile(nickname, bio) {
+  try {
+    const response = await axios.patch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/me`,
+      { nickname, bio },
+      {
+        withCredentials: true
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
+}
+
+// Function to upload a profile picture
+export async function uploadProfilePicture(file) {
+  const formData = new FormData();
+  formData.append('avatar', file);
+
+  try {
+    const response = await axios.patch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/me/avatar`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
+    throw error;
+  }
+}
+
+// Function to get the authenticated user's profile
+export async function getAuthenticatedUserProfile() {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/me`, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching authenticated user profile:", error);
+    throw error;
+  }
+}
