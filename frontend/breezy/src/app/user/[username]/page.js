@@ -165,7 +165,8 @@ export default function UserProfile({ params }) {
             {posts && posts.posts && posts.posts.length > 0 ? (
               posts.posts.map((post) => (
                 <Post
-                  key={post.id}
+                  idPost={post._id}
+                  currentUser={currentUser}
                   user={{
                     username: posts.author.username,
                     pseudo: posts.author.nickname,
@@ -175,7 +176,7 @@ export default function UserProfile({ params }) {
                     month: "long", day: "numeric", year: "numeric"
                   })}
                   content={post.content}
-                  likes={post.likes.length}
+                  likes={post.likes}
                   comments={post.comments.length}
                 />
               ))

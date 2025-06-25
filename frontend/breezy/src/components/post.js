@@ -1,11 +1,12 @@
 "use client";
 
-import { getUserProfilePictureUrl } from "@/utils/user";
-import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { likePost, unlikePost } from "@/utils/post";
 
 export default function Post({ 
-  user, 
+  user,
+  currentUser,
+  idPost, 
   date, 
   imageUrl, 
   content, 
@@ -13,16 +14,46 @@ export default function Post({
   comments 
 }) {
   const [postInfo, setPostInfo] = useState({
-    liked: false, // par défaut non liké, tu peux aussi passer en prop si besoin
+    liked: false,
   });
-  console.log(user);
 
+  // Met à jour liked quand currentUser ou likes changent
+  useEffect(() => {
+    if (currentUser) {
+      const isLiked = likes.includes(currentUser);
+      setPostInfo({ liked: isLiked });
+    }
+  }, [currentUser, likes]);
+
+   const toggleLike = async () => {
+    try {
+      if (postInfo.liked) {
+        await unlikePost(idPost);
+        setPostInfo((prev) => ({
+          ...prev,
+          liked: false
+        }));
+        console.log("Post unliked");
+      } else {
+        await likePost(idPost);
+        setPostInfo((prev) => ({
+          ...prev,
+          liked: true
+        }));
+        console.log("Post liked");
+      }
+      likes.length += postInfo.liked ? -1 : 1; // Met à jour le nombre de likes
+    } catch (error) {
+      console.error("Erreur lors du like/unlike :", error);
+    }
+  };
+  console.log(idPost);
   return (
     <div className="flex post bg-foreground-500 text-primary p-4 rounded-lg border border-foreground shadow-md mb-2">
       <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden">
         <Link href={`/user/${user.username}`} className="w-full">
           <img
-            src={getUserProfilePictureUrl(user.username)}
+            src={user.profilePicture}
             alt="Profil"
             className="w-full h-full object-cover"
           />
@@ -33,7 +64,7 @@ export default function Post({
           <Link href={`/user/${user.username}`} className="w-full">
             <h2 className="text-foreground font-bold text-sm font-roboto">{user.username}</h2>
           </Link>
-          <h3 className="text-secondary text-sm font-roboto">{user.pseudo}</h3>
+          <h3 className="text-secondary text-sm font-roboto">@{user.pseudo}</h3>
           <p className="text-secondary text-sm font-roboto">{date}</p>
         </div>
         <div>
@@ -68,8 +99,8 @@ export default function Post({
             </button>
             <p>{comments}</p>
           </div>
-          <div className="flex space-x-1">
-            <button>
+          <div className="flex space-x-1 justify-center items-center">
+            <button onClick={toggleLike} className="cursor-pointer">
               {/* Icône likes */}
               <svg
                 className="text-foreground"
@@ -84,7 +115,7 @@ export default function Post({
                 <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" />
               </svg>
             </button>
-            <p>{likes}</p>
+            <p>{likes.length}</p>
           </div>
         </div>
       </div>
