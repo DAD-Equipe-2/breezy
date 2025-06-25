@@ -11,19 +11,26 @@ import Button from "@/components/button";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { getCurrentUser, getUserProfilePictureUrl } from "@/utils/user";
+import { getFeed } from "@/utils/post";
 
 export default function HomePage() {
-  const router = useRouter();
   const [currentUser, setCurrentUser] = useState(null);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     async function fetchUser() {
       const username = await getCurrentUser();
       setCurrentUser(username);
     }
-
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      setPosts(await getFeed());
+    }
+    fetchPosts();
+  }, [currentUser]);
 
   return (
     <div className="flex flex-col bg-background text-foreground w-full min-h-screen pt-16 pb-24">
@@ -59,9 +66,29 @@ export default function HomePage() {
       </div>
 
       <div className="flex flex-col">
-        <Post />
-        <Post />
-        <Post />
+        {posts && posts.length > 0 ? (
+          posts.map((post) => (
+            <Post
+              key={post._id}
+              user={{
+                username: post.author,
+                pseudo: "jsp",
+                profilePicture: "jsp",
+              }}
+              date={new Date(post.createdAt).toLocaleDateString("fr-FR", {
+                month: "long", day: "numeric", year: "numeric"
+              })}
+              content={post.content}
+              likes={post.likes.length}
+              comments={post.comments.length}
+            />
+          ))
+        ) : (
+          <div className="flex justify-center items-center h-full">
+            <p className="text-sm text-muted mt-4">Aucun post disponible.</p>
+          </div>
+        )}
+
       </div>
 
       <div className="flex fixed bottom-25 right-4 z-50">

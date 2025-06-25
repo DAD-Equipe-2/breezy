@@ -167,9 +167,9 @@ export default function UserProfile({ params }) {
                 <Post
                   key={post.id}
                   user={{
-                    username: post.author.username,
-                    pseudo: post.author.nickname,
-                    profilePicture: post.author.avatarUrl,
+                    username: posts.author.username,
+                    pseudo: posts.author.nickname,
+                    profilePicture: posts.author.avatarUrl,
                   }}
                   date={new Date(post.createdAt).toLocaleDateString("fr-FR", {
                     month: "long", day: "numeric", year: "numeric"

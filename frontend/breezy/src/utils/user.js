@@ -102,14 +102,12 @@ export async function isFollowing(targetUsername) {
   }
 }
 
-// Function to follow a user
 export async function followUser(targetUsername) {
   try {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${targetUsername}/follow`,
-      { 
-        withCredentials: true 
-      }
+      null,
+      { withCredentials: true }
     );
     return response.data;
   } catch (error) {

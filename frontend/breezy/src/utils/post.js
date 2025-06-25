@@ -25,3 +25,22 @@ export async function getPosts(username) {
     return { posts: [] };
   }
 }
+
+// Function to get the feed posts
+// This function fetches the posts from the feed of the current user
+export async function getFeed() {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/feed`, {
+      withCredentials: true
+    });
+    console.log("Feed posts fetched:", response.data);
+    return response.data;
+   } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      console.debug("Pas de posts trouvés (404).");
+      return { posts: [] };
+    }
+    console.error("Erreur en récupérant le feed :", error);
+    throw error;
+  }
+}
