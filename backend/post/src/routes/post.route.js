@@ -216,9 +216,6 @@ router.get('/:postId/comments', postController.getComments);
  *               content:
  *                 type: string
  *                 description: The content of the post (max 280 characters)
- *               parent:
- *                 type: string
- *                 description: The ID of the parent post if this is a reply
  *     responses:
  *       '201':
  *         description: Post created successfully
