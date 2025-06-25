@@ -62,6 +62,52 @@ export function getUserProfilePictureUrl(username) {
   return `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/avatar`
 }
 
+// Function to check if a user is following another user
+export async function isFollowing(targetUsername) {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me/is-following/${targetUsername}`, {
+      withCredentials: true
+    });
+    return response.data.isFollowing; // Assuming the API returns an object with isFollowing property
+  } catch (error) {
+    console.error('Error checking following status:', error);
+    throw error;
+  }
+}
+
+// Function to follow a user
+export async function followUser(targetUsername) {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${targetUsername}/follow`,
+      { 
+        withCredentials: true 
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error following user:', error);
+    throw error;
+  }
+}
+
+
+// Function to unfollow a user
+export async function unfollowUser(targetUsername) {
+  try {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${targetUsername}/follow`,
+      {
+        withCredentials: true
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error unfollowing user:', error);
+    throw error;
+  }
+}
+
 // Function to update user profile
 export async function updateUserProfile(nickname, bio) {
   try {

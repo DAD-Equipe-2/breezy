@@ -4,10 +4,11 @@ import Button from "@/components/button";
 import Post from "@/components/post";
 import BackButton from "@/components/return";
 import { FaCalendar, FaSearch } from "react-icons/fa";
+import { LuMailPlus } from "react-icons/lu";
 import Footer from "@/components/footer";
 import { GiFeather } from "react-icons/gi";
 import Link from "next/link";
-import { getUserByUsername, getNumberOfFollowersAndFollowingByUsername, getUserProfilePictureUrl } from "@/utils/user";
+import { getCurrentUser, getUserByUsername, getNumberOfFollowersAndFollowingByUsername, getUserProfilePictureUrl, followUser, unfollowUser, isFollowing } from "@/utils/user";
 import { use, useEffect, useState } from "react";
 import { useParams } from 'next/navigation';
 
@@ -15,28 +16,58 @@ export default function UserProfile({ params }) {
   const { username } = useParams();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
+  const [isFollowingUser, setIsFollowingUser] = useState(false);
 
   useEffect(() => {
-    Promise.all([
-      getUserByUsername(username),
-      getNumberOfFollowersAndFollowingByUsername(username)
-    ])
-    .then(([user, numbers]) => {
-      if (!user) {
+  fetchData();
+  }, [username]);
+
+  async function fetchData() {
+    try {
+      const [userData, numbers, current] = await Promise.all([
+        getUserByUsername(username),
+        getNumberOfFollowersAndFollowingByUsername(username),
+        getCurrentUser(),
+      ]);
+
+      if (!userData) {
         setError("Utilisateur non trouvé.");
         return;
       }
-      setUser(user);
+      console.log("User data fetched:", userData);
+      setUser(userData);
       setFollowers(numbers.followers);
       setFollowing(numbers.following);
-    })
-    .catch(err => {
+      setCurrentUser(current);
+      if (userData.username != current) {
+        setIsFollowingUser(await isFollowing(username));
+      }
+    } catch (err) {
       console.error(err);
       setError("Erreur lors de la récupération des données.");
-    });
-  }, [username]);
+    }
+  } 
+
+  const handleFollowToggle = async () => {
+    try {
+      if (isFollowingUser) {
+        await unfollowUser(username);
+        console.log("Unfollowed user:", username);
+      } else {
+        await followUser(username);
+        console.log("Followed user:", username);
+      }
+
+      // Reload the user data
+      await fetchData();
+      console.log(`User ${isFollowingUser ? "unfollowed" : "followed"} successfully.`);
+    } catch (err) {
+      console.error("Erreur lors du (un)follow :", err);
+    }
+  };
 
   if (error) {
     return (
@@ -55,7 +86,7 @@ export default function UserProfile({ params }) {
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
         </svg>
-        <p className="text-lg text-gray-500">Chargement…</p>
+        <p className="text-lg text-gray-500">Loading…</p>
       </div>
     );
   }
@@ -72,6 +103,10 @@ export default function UserProfile({ params }) {
               src={getUserProfilePictureUrl(user.username)}
               alt="Profile Picture"
               className="w-24 h-24 rounded-full mb-4"
+              onError={(e) => {
+                e.target.onerror = null; // empêche boucle infinie si l’image par défaut échoue aussi
+                e.target.src = "/profil_picture.jpg"; // chemin vers ton avatar par défaut dans /public
+              }}
             />
             <p className="text-2xl font-bold">{user.username}</p>
             <p className="text-l font-italic">@{user.nickname}</p>
@@ -79,14 +114,43 @@ export default function UserProfile({ params }) {
             <p className="text-sm text-foreground text-opacity-70">{user.bio ? user.bio : "No bio provided"}</p>
             <div className="flex">
               <FaCalendar className="text-200 mr-2" />
-              <p className="text-sm text-foreground text-opacity-30">Joined: January 2023</p>
+              <p className="text-sm text-foreground text-opacity-30">
+                Joined {new Date(user.createdAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+              </p>
             </div>
             <div className="flex space-x-2 mt-2">
               <p className="text-sm text-foreground text-opacity-70">{following} followings</p>
               <p className="text-sm text-foreground text-opacity-70">{followers} followers</p>
             </div>
           </div>
-          <Button text="Edit profile" textFondSize="text-sm" paddingX="px-4"></Button>
+          
+          {currentUser === user.username ? (
+          <Link href="/settings">
+            <Button text="Edit profile" textFondSize="text-sm" paddingX="px-4" />
+          </Link>
+        ) : (
+          <div className="flex space-x-2 mr-1 items-center">
+            <Link href={`/message/${user.username}`}>
+              <Button
+                icon={<LuMailPlus className="w-4 h-4" />}
+                textFondSize="text-sm"
+                paddingX="px-3"
+                color="bg-primary"
+                textcolor="text-foreground"
+                bordercolor="border-primary"
+              />
+            </Link>
+            <Button
+              text={isFollowingUser ? "Unfollow" : "Follow"}
+              textFondSize="text-sm"
+              paddingX="px-4"
+              color={isFollowingUser ? "bg-foreground" : "bg-primary"}
+              textcolor={isFollowingUser ? "text-primary" : "text-forgeround"}
+              bordercolor="border-primary"
+              action={handleFollowToggle}
+            />
+          </div>
+        )}
         </div>
         <br/>
         <hr/>

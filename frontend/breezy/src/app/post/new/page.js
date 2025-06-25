@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Button from "@/components/button";
 import Return from "@/components/return";
 import { FaImage } from "react-icons/fa";
+import { createPost } from "@/utils/post";
 
 export default function TweetingPage() {
   const fileInputRef = useRef(null);
@@ -27,13 +28,22 @@ export default function TweetingPage() {
     }
   };
 
-  const handleTweet = () => {
-    console.log("Tweet content:", tweet);
-    if (imagePreview) {
-      console.log("Image URL:", imagePreview);
+  const handleTweet = async () => {
+  try {
+    if (!tweet.trim()) {
+      alert("Le tweet ne peut pas être vide !");
+      return;
     }
-    // Tu peux maintenant envoyer tout ça à une API
-  };
+
+    await createPost(tweet);
+
+    // Reset après envoi
+    setTweet("");
+    alert("Tweet posté !");
+  } catch (error) {
+    alert("Une erreur est survenue lors de la publication.");
+  }
+};
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground py-4 w-full">
@@ -44,7 +54,7 @@ export default function TweetingPage() {
         <div className="flex items-center gap-3">
           {/* Bouton image */}
           <button
-            onClick={handleImageClick}
+            onClick={() => alert("Coming soon !")}
             aria-label="Importer une image"
             className="text-primary hover:cursor-pointer"
           >
@@ -56,7 +66,7 @@ export default function TweetingPage() {
             type="file"
             accept=".jpg, .jpeg, image/jpeg"
             ref={fileInputRef}
-            onChange={handleFileChange}
+            //onClick={() => alert("Coming soon !")}
             className="hidden"
           />
 
@@ -69,6 +79,7 @@ export default function TweetingPage() {
             textFondSize="text-sm"
             paddingX="px-6"
             color="bg-primary"
+            disabled={!tweet.trim()} 
           />
         </div>
       </div>
