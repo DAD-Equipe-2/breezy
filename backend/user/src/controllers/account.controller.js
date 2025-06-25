@@ -84,12 +84,19 @@ exports.getAvatar = async (req, res) => {
         const user = await User.findOne({ username: username })
         .select('-_id avatar');
 
-        // Check if user exists and has an avatar
-        if (!user || !user.avatar || !user.avatar.data) return res.status(404).send('No avatar found');
+        // Check if user exists
+        if (!user) return res.status(404).send('User not found');
+
+        // Check if user has an avatar
+        if (!user.avatar || !user.avatar.data) {
+            res.set('Content-Type', 'image/jpeg');
+            return res.sendFile('default-avatar.jpg', { root: './public' });
+        }
         
         res.set('Content-Type', user.avatar.contentType);
         return res.send(user.avatar.data);
     } catch (err) {
+        console.error('Error fetching avatar:', err);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
