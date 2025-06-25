@@ -11,26 +11,29 @@ import Link from "next/link";
 import { getCurrentUser, getUserByUsername, getNumberOfFollowersAndFollowingByUsername, getUserProfilePictureUrl, followUser, unfollowUser, isFollowing } from "@/utils/user";
 import { use, useEffect, useState } from "react";
 import { useParams } from 'next/navigation';
+import { getPosts } from "@/utils/post";
 
 export default function UserProfile({ params }) {
   const { username } = useParams();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
   const [isFollowingUser, setIsFollowingUser] = useState(false);
 
   useEffect(() => {
-  fetchData();
+    fetchData();
   }, [username]);
 
   async function fetchData() {
     try {
-      const [userData, numbers, current] = await Promise.all([
+      const [userData, numbers, current, posts] = await Promise.all([
         getUserByUsername(username),
         getNumberOfFollowersAndFollowingByUsername(username),
         getCurrentUser(),
+        getPosts(username)
       ]);
 
       if (!userData) {
@@ -42,6 +45,8 @@ export default function UserProfile({ params }) {
       setFollowers(numbers.followers);
       setFollowing(numbers.following);
       setCurrentUser(current);
+      setPosts(posts);
+      console.log("Posts fetched:", posts);
       if (userData.username != current) {
         setIsFollowingUser(await isFollowing(username));
       }
@@ -156,11 +161,30 @@ export default function UserProfile({ params }) {
         <hr/>
         <br/>
         <div className="flex flex-col">
-          <Post></Post>
-          <Post></Post>
-          <Post></Post>
-          <Post></Post>
+          <div className="flex flex-col">
+            {posts.posts && posts.posts.length > 0 ? (
+              posts.posts.map((post) => (
+                <Post
+                  key={post.id}
+                  user={{
+                    username: posts.author.username,       // Utilise l'auteur du post, pas celui du container
+                    pseudo: posts.author.nickname,          // Pareil ici
+                    profilePicture: posts.author.avatarUrl,
+                  }}
+                  date={new Date(post.createdAt).toLocaleDateString("fr-FR", {
+                    month: "long", day: "numeric", year: "numeric" 
+                  })}
+                  content={post.content}
+                  likes={post.likes.length}
+                  //comments={post.comments.length}
+                />
+              ))
+            ) : (
+              <p className="text-sm text-muted">Aucun post disponible.</p>
+            )}
+          </div>
         </div>
+
       <div className="flex fixed bottom-25 right-4 z-50">
         <Link href="/post/new">
           <Button
