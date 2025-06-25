@@ -112,7 +112,7 @@ export async function unfollowUser(targetUsername) {
 export async function updateUserProfile(nickname, bio) {
   try {
     const response = await axios.patch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/me`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me`,
       { nickname, bio },
       {
         withCredentials: true
@@ -132,7 +132,7 @@ export async function uploadProfilePicture(file) {
 
   try {
     const response = await axios.patch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/me/avatar`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me/avatar`,
       formData,
       {
         headers: {
@@ -151,7 +151,7 @@ export async function uploadProfilePicture(file) {
 // Function to get the authenticated user's profile
 export async function getAuthenticatedUserProfile() {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/me`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me`, {
       withCredentials: true
     });
     return response.data;
