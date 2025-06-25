@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { likePost, unlikePost } from "@/utils/post";
 
 export default function Post({ 
   user,
-  currentUser, 
+  currentUser,
+  idPost, 
   date, 
   imageUrl, 
   content, 
@@ -23,12 +25,29 @@ export default function Post({
     }
   }, [currentUser, likes]);
 
-  const toggleLike = () => {
-    setPostInfo((prev) => {
-      return { liked: !prev.liked };
-    });
+   const toggleLike = async () => {
+    try {
+      if (postInfo.liked) {
+        await unlikePost(idPost);
+        setPostInfo((prev) => ({
+          ...prev,
+          liked: false
+        }));
+        console.log("Post unliked");
+      } else {
+        await likePost(idPost);
+        setPostInfo((prev) => ({
+          ...prev,
+          liked: true
+        }));
+        console.log("Post liked");
+      }
+      likes.length += postInfo.liked ? -1 : 1; // Met à jour le nombre de likes
+    } catch (error) {
+      console.error("Erreur lors du like/unlike :", error);
+    }
   };
-
+  console.log(idPost);
   return (
     <div className="flex post bg-foreground-500 text-primary p-4 rounded-lg border border-foreground shadow-md mb-2">
       <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden">
@@ -41,7 +60,7 @@ export default function Post({
       <div className="flex flex-col ml-1 pr-2 space-y-2">
         <div className="flex whitespace-nowrap space-x-2">
           <h2 className="text-foreground font-bold text-sm font-roboto">{user.username}</h2>
-          <h3 className="text-secondary text-sm font-roboto">{user.pseudo}</h3>
+          <h3 className="text-secondary text-sm font-roboto">@{user.pseudo}</h3>
           <p className="text-secondary text-sm font-roboto">{date}</p>
         </div>
         <div>

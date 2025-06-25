@@ -43,7 +43,7 @@ export async function likePost(postId) {
 export async function unlikePost(postId) {
   try {
     const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/unlike`, 
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/like`, 
       {
         withCredentials: true
       }
