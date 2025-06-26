@@ -32,7 +32,7 @@ export async function getFeed() {
     const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/feed`, {
       withCredentials: true
     });
-      return response.data;
+      return response.data.posts;
   } catch (error) {
     console.error("Erreur en récupérant le feed :", error);
     throw error;
@@ -73,7 +73,7 @@ export async function getComments(postId) {
     const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/comments`, {
       withCredentials: true
     });
-    return response.data;
+    return response.data.comments;
   } catch (error) {
     console.error('Error fetching comments:', error);
   }

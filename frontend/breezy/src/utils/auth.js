@@ -39,3 +39,22 @@ export async function registerUserAuth({ username, password, nickname }) {
     throw new Error(errMsg);
   }
 }
+
+export async function logOutUser() {
+  try {
+    await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`,
+      {},
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return true;
+  } catch (error) {
+    const errMsg = error.response?.data || error.message || 'Échec de la requête';
+    throw new Error(errMsg);
+  }
+}
