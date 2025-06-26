@@ -112,12 +112,12 @@ services:
     build:
       context: ./frontend/breezy
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:8080/api/v1
     restart: always
     container_name: breezy-nextjs-app
     ports:
       - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8080/api/v1
     depends_on:
       - gateway
     # networks:
