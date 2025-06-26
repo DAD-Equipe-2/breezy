@@ -133,7 +133,7 @@ exports.getFeed = async (req, res) => {
     try {
         const resp = await axios.get(`${USER_SERVICE}/${req.headers['x-user-name']}/following`);
         const followings = resp.data.map(u => u.username);
-        const feed = await Post.find({ author: { $in: followings } })
+        const feed = await Post.find({ author: { $in: followings }, parent: null })
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(10)
