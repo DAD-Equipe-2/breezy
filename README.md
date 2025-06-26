@@ -107,7 +107,7 @@ L'application repose sur une **architecture microservices**. Chaque service est 
 
 2. **Configurer les variables d’environnement**  
    Un fichier d'exemple est disponible ici :
-   `frontend/breezy/.env.example`
+   `frontend/breezy/.env.example`  
    ➤ Copiez-le et adaptez-le selon votre configuration :
 
    ```bash
