@@ -5,12 +5,13 @@ import { FaHome, FaSearch, FaSignOutAlt } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
 import { MdMailOutline } from "react-icons/md";
 import { useRouter } from 'next/navigation';
+import { logOutUser } from '@/utils/auth';
 
 export default function Footer() {
   const router = useRouter();
 
   const handleLogout = () => {
-    //TODO : call the /logout route to remove the accessToken cookie
+    logOutUser();
     router.push('/login');
   };
 
