@@ -1,16 +1,20 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "@/components/button";
 import Return from "@/components/return";
 import { FaImage } from "react-icons/fa";
 import { createPost } from "@/utils/post";
+import { getCurrentUser, getUserProfilePictureUrl } from "@/utils/user";
 
 export default function TweetingPage() {
   const fileInputRef = useRef(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [tweet, setTweet] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
   const maxCharacters = 280;
+
+  const [confirmationMessage, setConfirmationMessage] = useState();
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
@@ -29,21 +33,38 @@ export default function TweetingPage() {
   };
 
   const handleTweet = async () => {
-  try {
-    if (!tweet.trim()) {
-      alert("Le tweet ne peut pas être vide !");
-      return;
+    try {
+      if (!tweet.trim()) {
+        alert("Le tweet ne peut pas être vide !");
+        return;
+      }
+
+      await createPost(tweet);
+
+      // Reset après envoi
+      setTweet("");
+      setConfirmationMessage("Post successfully published !")
+    } catch (error) {
+      alert("Une erreur est survenue lors de la publication.");
     }
+  };
 
-    await createPost(tweet);
-
-    // Reset après envoi
-    setTweet("");
-    alert("Tweet posté !");
-  } catch (error) {
-    alert("Une erreur est survenue lors de la publication.");
-  }
-};
+  useEffect(() => {
+      fetchData();
+  }, []);
+  
+  async function fetchData() {
+    try {
+      const [current] = await Promise.all([
+        getCurrentUser(),
+      ]);
+      setCurrentUser(current);
+      console.log("CURRENT USER : ", current)
+    } catch (err) {
+      console.error(err);
+      setError("Erreur lors de la récupération des données.");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground py-4 w-full">
@@ -87,11 +108,10 @@ export default function TweetingPage() {
       {/* Contenu : profil + input */}
       <div className="flex items-centers px-4 w-full">
         <img
-          src="/breezy_logo_dark.jpg"
-          alt="Profil"
-          className="w-12 h-12 object-cover rounded-full mr-3"
+            src={getUserProfilePictureUrl(currentUser)}
+            className="w-16 h-16 aspect-square object-cover rounded-full"
         />
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full ml-2">
           <textarea
             value={tweet}
             onChange={(e) => {
@@ -100,7 +120,7 @@ export default function TweetingPage() {
               }
             }}
             placeholder="What's happening?"
-            className="w-full text-sm font-roboto text-foreground break-words placeholder:text-secondary bg-transparent"
+            className="w-full text-sm font-roboto text-foreground break-words placeholder:text-secondary bg-transparent p-4"
             rows={4}
           />
           <div className="text-right text-sm text-muted-foreground mt-1">
@@ -109,22 +129,7 @@ export default function TweetingPage() {
         </div>
       </div>
 
-      {/* Aperçu de l'image sélectionnée */}
-      {imagePreview && (
-        <div className="px-4 mt-4 relative">
-          <img
-            src={imagePreview}
-            alt="Aperçu"
-            className="max-w-full max-h-64 rounded-lg"
-          />
-          <button
-            onClick={() => setImagePreview(null)}
-            className="absolute top-2 right-2 bg-red-500 text-foreground rounded-full p-1 text-xs hover:bg-red-600 transition"
-          >
-            ✕
-          </button>
-        </div>
-      )}
+      <p className="text-l text-green text-center">{confirmationMessage}</p>
     </div>
   );
 }

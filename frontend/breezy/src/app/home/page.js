@@ -82,7 +82,7 @@ export default function HomePage() {
               })}
               content={post.content}
               likes={post.likes}
-              comments={post.comments.length}
+              comments={post.comments}
             />
           ))
         ) : (
