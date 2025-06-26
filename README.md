@@ -31,14 +31,18 @@ Breezy est une plateforme de microblogging décentralisée, pensée autour d’u
 L'application repose sur une **architecture microservices**. Chaque service est indépendant, conteneurisé avec Docker, et interagit via une API Gateway centralisée.
 
 📌 **Schéma d’architecture :**
-![Schéma d’architecture](docs/archi.jpg)
+<p align="center">
+  <img src="docs/archi.jpg" alt="Schéma d’architecture" width="800" />
+</p>
 
 ---
 
 ## 🧩 Diagrammes
 
 * 🔁 **Diagramme de séquence (connexion) :**
-  ![Diagramme de séquence](docs/sequence-connexion.jpg)
+  <p align="center">
+    <img src="docs/sequence-connexion.jpg" alt="Diagramme de séquence" width="600" />
+  </p>
 
 * 🎨 **Maquette UI**
   [Voir la maquette Figma](https://www.figma.com/design/rtzkGhHuG5Wy2zHR6tJrns/Breesy?node-id=0-1&p=f&t=YGtQfWLPAKJUyOzB-0)
