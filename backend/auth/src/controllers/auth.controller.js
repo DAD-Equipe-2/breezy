@@ -149,3 +149,21 @@ exports.delete = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+
+exports.logout = async (req, res) => {
+    try {
+        // Clear the cookies
+        res.clearCookie('accessToken', { httpOnly: true, secure: true });
+        res.clearCookie('refreshToken', { httpOnly: true, secure: true });
+
+        // Invalidate the refresh token in the database
+        await User.findOneAndUpdate({ username: req.user.username }, { refresh_token: null }, { new: true });
+       
+        return res.status(200).json({ message: 'Logged out successfully' });
+    }
+    catch (error) {
+        console.error('Logout error:', error, req.user);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}

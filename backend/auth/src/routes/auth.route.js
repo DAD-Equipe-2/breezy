@@ -126,8 +126,29 @@ router.post('/renew', authenticateJWT(process.env.REFRESH_JWT_KEY, 'refresh'), a
  *         description: User account deleted successfully
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
 */
 router.delete('/delete', authController.delete);
+
+
+/**
+ * @swagger
+ * /logout:
+ *   post:
+ *     summary: Logout user
+ *     tags: [Auth]
+ *     security:
+ *      - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: User logged out successfully
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+*/
+router.post('/logout', authenticateJWT(process.env.ACCESS_JWT_KEY, 'access'), authController.logout);
 
 
 module.exports = router;
