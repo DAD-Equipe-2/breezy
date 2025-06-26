@@ -1,9 +1,9 @@
-import axios from 'axios';
+import api from './axios';
 
 export async function getCurrentUser() {
   let currentUser = localStorage.getItem('currentUser');
   if (!currentUser) {
-    axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me`, {
+    api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me`, {
       withCredentials: true
     })
       .then(response => {
@@ -18,7 +18,7 @@ export async function getCurrentUser() {
 
 export async function getUserByUsername(username) {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}`, {
+    const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}`, {
       withCredentials: true
     });
     return response.data;
@@ -34,7 +34,7 @@ export async function getUserByUsername(username) {
 export async function getNumberOfFollowersAndFollowingByUsername(username) {
   let numbers = {followers : 0, following : 0};
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/followers`, {
+    const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/followers`, {
       withCredentials: true
     });
     numbers.followers = response.data.length;
@@ -46,7 +46,7 @@ export async function getNumberOfFollowersAndFollowingByUsername(username) {
     throw error;
   }
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/following`, {
+    const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${username}/following`, {
       withCredentials: true
     });
     numbers.following = response.data.length;
@@ -69,7 +69,7 @@ export async function searchUsers(username) {
   }
 
   try {
-    const response = await axios.get(
+    const response = await api.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/search`,
         {
           params: { username: text },
@@ -91,7 +91,7 @@ export function getUserProfilePictureUrl(username) {
 // Function to check if a user is following another user
 export async function isFollowing(targetUsername) {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me/is-following/${targetUsername}`, {
+    const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me/is-following/${targetUsername}`, {
       withCredentials: true
     });
     return response.data.isFollowing; // Assuming the API returns an object with isFollowing property
@@ -103,7 +103,7 @@ export async function isFollowing(targetUsername) {
 
 export async function followUser(targetUsername) {
   try {
-    const response = await axios.post(
+    const response = await api.post(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${targetUsername}/follow`,
       null,
       { withCredentials: true }
@@ -119,7 +119,7 @@ export async function followUser(targetUsername) {
 // Function to unfollow a user
 export async function unfollowUser(targetUsername) {
   try {
-    const response = await axios.delete(
+    const response = await api.delete(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${targetUsername}/follow`,
       {
         withCredentials: true
@@ -135,7 +135,7 @@ export async function unfollowUser(targetUsername) {
 // Function to update user profile
 export async function updateUserProfile(nickname, bio) {
   try {
-    const response = await axios.patch(
+    const response = await api.patch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me`,
       { nickname, bio },
       {
@@ -155,7 +155,7 @@ export async function uploadProfilePicture(file) {
   formData.append('avatar', file);
 
   try {
-    const response = await axios.patch(
+    const response = await api.patch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me/avatar`,
       formData,
       {
@@ -175,7 +175,7 @@ export async function uploadProfilePicture(file) {
 // Function to get the authenticated user's profile
 export async function getAuthenticatedUserProfile() {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me`, {
+    const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/me`, {
       withCredentials: true
     });
     return response.data;

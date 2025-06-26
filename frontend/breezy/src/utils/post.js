@@ -1,9 +1,9 @@
-import axios from 'axios';
+import api from './axios';
 
 // Function to create a new post
 export async function createPost(content) {
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/`, { content }, {
+    const response = await api.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/`, { content }, {
       withCredentials: true
     });
     return response.data;
@@ -16,10 +16,9 @@ export async function createPost(content) {
 // Function to get all posts
 export async function getPosts(username) {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/user/${username}`, {
+    const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/user/${username}`, {
       withCredentials: true
     });
-    console.log("Posts fetched:", response.data);
     return response.data;
   } catch (error) {
     return { posts: [] };
@@ -30,13 +29,12 @@ export async function getPosts(username) {
 // This function fetches the posts from the feed of the current user
 export async function getFeed() {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/feed`, {
+    const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/feed`, {
       withCredentials: true
     });
-    console.log("Feed posts fetched:", response.data);
     return response.data;
    } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
+    if (api.isAxiosError(error) && error.response?.status === 404) {
       console.debug("Pas de posts trouvés (404).");
       return { posts: [] };
     }
@@ -48,7 +46,7 @@ export async function getFeed() {
 // Function to like a post
 export async function likePost(postId) {
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/like`, {}, {
+    const response = await api.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/like`, {}, {
       withCredentials: true
     });
     return response.data;
@@ -61,7 +59,7 @@ export async function likePost(postId) {
 // Function to unlike a post
 export async function unlikePost(postId) {
   try {
-    const response = await axios.delete(
+    const response = await api.delete(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/like`, 
       {
         withCredentials: true
@@ -76,23 +74,21 @@ export async function unlikePost(postId) {
 
 export async function getComments(postId) {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/comments`, {
+    const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/comments`, {
       withCredentials: true
     });
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      console.log("Pas de commentaires trouvés (404).");
+    if (api.isAxiosError(error) && error.response?.status === 404) {
       return [];
     }
     console.error('Error fetching comments:', error);
-    throw error;
   }
 }
 
 export async function getPost(id) {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${id}`, {
+    const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${id}`, {
       withCredentials: true
     });
     return response.data;
@@ -105,7 +101,7 @@ export async function getPost(id) {
 //Add a comment to a post
 export async function addComment(postId, content) {
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/comments`, { content }, {
+    const response = await api.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/comments`, { content }, {
       withCredentials: true
     });
     return response.data;
@@ -118,7 +114,7 @@ export async function addComment(postId, content) {
 //Update a post
 export async function updatePost(postId, content) {
   try {
-    const response = await axios.patch(
+    const response = await api.patch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}`,
       { content },
       { withCredentials: true }
