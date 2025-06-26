@@ -172,7 +172,7 @@ export default function UserProfile({ params }) {
                 />
               ))
             ) : (
-              <p className="text-sm text-muted mt-4">Aucun post disponible est survenue.</p>
+              <p className="text-sm text-muted mt-4">No post available</p>
             )}
           </div>
 

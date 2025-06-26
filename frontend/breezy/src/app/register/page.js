@@ -53,7 +53,9 @@ export default function Register() {
 
         router.push("/login?registered=true");
       } catch (err) {
-        console.error(err);
+        if (err.message === "Username already exists") {
+          setErrorUsername("Username already exists. Please choose another one.");
+        }
         setError("An error occurred during registration. Please try again.");
       } finally {
         setLoading(false);

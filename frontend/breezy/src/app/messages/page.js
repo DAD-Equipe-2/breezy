@@ -1,3 +1,5 @@
+import Footer from "@/components/footer";
+
 export default function Messages() {
   return (
     <div>
