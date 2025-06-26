@@ -98,14 +98,14 @@ L'application repose sur une **architecture microservices**. Chaque service est 
 
 ## 🚀 Installation
 
-1. **Cloner le dépôt**
+1. **Cloner le dépôt**  
 
    ```bash
    git clone https://github.com/ton-projet/breezy.git
    cd breezy
    ```
 
-2. **Configurer les variables d’environnement**
+2. **Configurer les variables d’environnement**  
    Un fichier d'exemple est disponible ici :
    `frontend/breezy/.env.example`
    ➤ Copiez-le et adaptez-le selon votre configuration :
@@ -114,17 +114,17 @@ L'application repose sur une **architecture microservices**. Chaque service est 
    cp frontend/breezy/.env.example frontend/breezy/.env
    ```
 
-3. **Lancer l’environnement Docker**
+3. **Lancer l’environnement Docker**  
 
    ```bash
    docker-compose up --build
    ```
 
-4. **Tester l’API**
+4. **Tester l’API**  
    La documentation Swagger est disponible à cette adresse :  
    👉 [http://localhost:8080/docs](http://localhost:8080/docs)
 
-5. **Accéder au frontend**
+5. **Accéder au frontend**  
    Une fois les services démarrés, l’interface utilisateur React est accessible ici :  
    👉 [http://localhost:3000](http://localhost:3000)
 
