@@ -163,7 +163,6 @@ exports.logout = async (req, res) => {
         return res.status(200).json({ message: 'Logged out successfully' });
     }
     catch (error) {
-        console.error('Logout error:', error, req.user);
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
