@@ -59,7 +59,6 @@ export default function TweetingPage() {
         getCurrentUser(),
       ]);
       setCurrentUser(current);
-      console.log("CURRENT USER : ", current)
     } catch (err) {
       console.error(err);
       setError("Erreur lors de la récupération des données.");

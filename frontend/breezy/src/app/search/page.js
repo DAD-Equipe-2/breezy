@@ -19,29 +19,18 @@ export default function Search() {
     return (
         <div className="flex flex-col min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] py-4 w-full pb-20">
             {/* Barre de retour + recherche */}
-            <div className="flex items-center justify-start mb-3 px-4 gap-4">
+            <div className="flex items-start justify-start mb-3 px-4 gap-4">
                 <Return />
-                <SearchBar
+                <div className="mt-1 w-full">
+                    <SearchBar
                     placeholder="Search @people"
                     width="w-full"
                     rounded
                     query={query}
                     setQuery={setQuery}
                     handleSearch={() => handleSearch(query)}
-                    inputClassName="
-            bg-[var(--color-background)]
-            border
-            border-[var(--color-quinary)]
-            text-[var(--color-foreground)]
-            placeholder-[var(--color-secondary)]
-            focus:outline-none
-          "
-                    buttonClassName="
-            bg-[var(--color-primary)]
-            hover:bg-[var(--color-tertiary)]
-            text-[var(--color-background)]
-          "
-                />
+                    />
+                </div>
             </div>
 
             {/* Résultats */}
@@ -87,7 +76,9 @@ export default function Search() {
                         </Link>
                     ))
                 ) : (
-                    <p className="text-[var(--color-secondary)]">Aucun résultat trouvé</p>
+                    <div className="flex-1 flex items-center justify-center text-secondary text-center min-h-[40vh]">
+                        Aucun résultat trouvé
+                    </div>
                 )}
             </div>
 

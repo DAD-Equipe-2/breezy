@@ -3,7 +3,6 @@
 import Return from "@/components/return";
 import Footer from "@/components/footer";
 import Post from "@/components/post";
-import { useRouter } from "next/navigation";
 import { CiSettings } from "react-icons/ci";
 import { GiFeather } from "react-icons/gi";
 import Link from "next/link";
@@ -60,16 +59,16 @@ export default function HomePage() {
         <div className="ml-auto">
           <CiSettings
             className="w-8 h-8 cursor-pointer text-foreground"
-            onClick={() => router.push("/settings")}
+            onClick={() => alert("Coming soon... !")}
           />
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-4">
         {posts && posts.length > 0 ? (
           posts.map((post) => (
             <Post
-              key={post.id}
+              key={post._id}
               idPost={post._id}
               currentUser={currentUser}
               user={{

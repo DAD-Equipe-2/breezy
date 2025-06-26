@@ -7,7 +7,6 @@ export async function getCurrentUser() {
       withCredentials: true
     })
       .then(response => {
-      console.log('Axios is working:', response.data);
       localStorage.setItem('currentUser', response.data.username);
     })
     .catch(error => {

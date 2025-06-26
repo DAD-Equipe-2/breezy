@@ -18,7 +18,10 @@ export default function EditProfilePage() {
   const [bio, setBio] = useState("");
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const fileInputRef = useRef(null);
+  const maxCharacters = 300;
 
   useEffect(() => {
   async function fetchUser() {
@@ -55,10 +58,9 @@ export default function EditProfilePage() {
   try {
     await uploadProfilePicture(file);
     setProfilePictureUrl(getUserProfilePictureUrl(userData.username) + `?t=${Date.now()}`);
-    console.log("Upload réussi !");
-  } catch (error) {
-    console.error("Erreur d'upload :", error);
-  }
+    } catch (error) {
+      console.error("Erreur d'upload :", error);
+    }
   };
 
 
@@ -69,10 +71,12 @@ export default function EditProfilePage() {
   const handleFileChange = async () => {
     try {
       await updateUserProfile(nickname, bio);
-      alert("Profil mis à jour avec succès !");
+      setErrorMessage("");
+      setConfirmationMessage("Profile successfully updated !");
     } catch (error) {
       console.error("Erreur lors de la mise à jour du profil :", error);
-      alert("Une erreur est survenue lors de la mise à jour du profil.");
+      setConfirmationMessage("");
+      setErrorMessage("An unknown error occured");
     }
   }
 
@@ -140,8 +144,17 @@ export default function EditProfilePage() {
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
         />
-        <Input Hint="Bio" textarea={true} FlexType="flex-col" value={bio} onChange={(e) => setBio(e.target.value)}/>
+        <Input Hint="Bio" textarea={true} FlexType="flex-col" value={bio} onChange={(e) => 
+        {if (e.target.value.length <= maxCharacters) {setBio(e.target.value)}}}/>
       </div>
+      {bio.length} / {maxCharacters}
+      {confirmationMessage && (
+        <p className="text-green text-xl mt-8">{confirmationMessage}</p>
+      )}
+
+      {errorMessage && (
+        <p className="text-[red] text-xl mt-8">{errorMessage}</p>
+      )}
     </div>
   );
 }

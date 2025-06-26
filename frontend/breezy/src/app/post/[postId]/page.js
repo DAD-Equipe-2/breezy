@@ -29,7 +29,7 @@ export default function PostDetails({ params }) {
     const file = event.target.files[0];
     if (file) {
       if (file.type !== "image/jpeg") {
-        alert("Seules les images JPG sont autorisées.");
+        setError("Seules les images JPG sont autorisées.");
         return;
       }
       const imageUrl = URL.createObjectURL(file);
@@ -40,7 +40,7 @@ export default function PostDetails({ params }) {
   const handleTweet = async () => {
     try {
       if (!tweet.trim()) {
-        alert("Le tweet ne peut pas être vide !");
+        setError("Le tweet ne peut pas être vide !");
         return;
       }
   
@@ -50,13 +50,12 @@ export default function PostDetails({ params }) {
       setTweet("");
       fetchData(); // Refresh comments after replying
     } catch (error) {
-      alert("Une erreur est survenue lors de la publication.");
+      setError("Une erreur est survenue lors de la publication.");
     }
   };
 
   // Récupération du post et des commentaires
   useState(() => {
-    console.log("POST ID : ", postId);
     fetchData();
   }, []);
 
@@ -70,8 +69,6 @@ export default function PostDetails({ params }) {
       setPost(post);
       setComments(comments);
       setCurrentUser(current);
-      console.log("Post fetched:", post);
-      console.log("Comments fetched:", comments);
     } catch (err) {
       console.error(err);
       setError("Erreur lors de la récupération des données.");
@@ -163,11 +160,11 @@ export default function PostDetails({ params }) {
             </div>
         </div>
 
-        <h1 className="my-8 text-xl">Comments</h1>
+        <h1 className="my-8 text-xl">{post.comments} Comments :</h1>
 
         {comments.length > 0 && comments.map((comment) => (
           <Post
-            key={comment.id}
+            key={comment._id}
             idPost={comment._id}
             currentUser={currentUser}
             user={{

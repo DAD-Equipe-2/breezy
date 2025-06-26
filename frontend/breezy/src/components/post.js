@@ -5,7 +5,7 @@ import { likePost, unlikePost } from "@/utils/post";
 import Link from "next/link";
 import { CiEdit } from "react-icons/ci";
 
-export default function Post({ 
+export default function Post({
   user,
   currentUser,
   idPost, 
@@ -33,21 +33,18 @@ export default function Post({
           ...prev,
           liked: false
         }));
-        console.log("Post unliked");
       } else {
         await likePost(idPost);
         setPostInfo((prev) => ({
           ...prev,
           liked: true
         }));
-        console.log("Post liked");
       }
       likes.length += postInfo.liked ? -1 : 1; // Met à jour le nombre de likes
     } catch (error) {
       console.error("Erreur lors du like/unlike :", error);
     }
   };
-  console.log(idPost);
   return (
     <div className="flex post bg-foreground-500 text-primary p-4 rounded-lg border border-foreground shadow-md mb-2">
       <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden">
@@ -60,12 +57,12 @@ export default function Post({
         </Link>
       </div>
       <div className="flex flex-col ml-1 pr-2 space-y-2 min-w-0 ml-4">
-        <div className="flex whitespace-nowrap space-x-2">
+        <div className="flex flex-wrap items-center gap-x-2 text-sm font-roboto">
           <Link href={`/user/${user.username}`}>
-            <h2 className="text-foreground font-bold text-sm font-roboto">{user.pseudo}</h2>
+            <h2 className="text-foreground font-bold break-words">{user.pseudo}</h2>
           </Link>
-          <h3 className="text-secondary text-sm font-roboto">@{user.username}</h3>
-          <p className="text-secondary text-sm font-roboto">{date}</p>
+          <h3 className="text-secondary">@{user.username}</h3>
+          <p className="text-secondary whitespace-nowrap">{date}</p>
         </div>
         <div>
           <p className="text-secondary text-sm font-roboto whitespace-pre-wrap break-words">

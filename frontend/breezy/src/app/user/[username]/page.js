@@ -40,13 +40,11 @@ export default function UserProfile({ params }) {
         setError("Utilisateur non trouvé.");
         return;
       }
-      console.log("User data fetched:", userData);
       setUser(userData);
       setFollowers(numbers.followers);
       setFollowing(numbers.following);
       setCurrentUser(current);
       setPosts(posts);
-      console.log("Posts fetched:", posts);
       if (userData.username != current) {
         setIsFollowingUser(await isFollowing(username));
       }
@@ -60,15 +58,12 @@ export default function UserProfile({ params }) {
     try {
       if (isFollowingUser) {
         await unfollowUser(username);
-        console.log("Unfollowed user:", username);
       } else {
         await followUser(username);
-        console.log("Followed user:", username);
       }
 
       // Reload the user data
       await fetchData();
-      console.log(`User ${isFollowingUser ? "unfollowed" : "followed"} successfully.`);
     } catch (err) {
       console.error("Erreur lors du (un)follow :", err);
     }
@@ -164,7 +159,7 @@ export default function UserProfile({ params }) {
             {posts && posts.posts && posts.posts.length > 0 ? (
               posts.posts.map((post) => (
                 <Post
-                  key={post.id}
+                  key={post._id}
                   idPost={post._id}
                   currentUser={currentUser}
                   user={{
