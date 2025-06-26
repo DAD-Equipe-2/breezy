@@ -6,10 +6,10 @@ Breezy est une plateforme de microblogging décentralisée, pensée autour d’u
 
 ## 📌 Table des matières
 
-* [Fonctionnalités](#-fonctionnalités)
-* [Architecture](#-architecture)
+* [Fonctionnalités](#-fonctionnalités-principales)
+* [Architecture](#%EF%B8%8F-architecture)
 * [Diagrammes](#-diagrammes)
-* [Technologies](#-technologies)
+* [Technologies](#%EF%B8%8F-technologies)
 * [Installation](#-installation)
 * [Contributeurs](#-contributeurs)
 
@@ -117,11 +117,11 @@ L'application repose sur une **architecture microservices**. Chaque service est 
    ```
 
 4. **Tester l’API**
-   La documentation Swagger est disponible à cette adresse :
+   La documentation Swagger est disponible à cette adresse :  
    👉 [http://localhost:8080/docs](http://localhost:8080/docs)
 
 5. **Accéder au frontend**
-   Une fois les services démarrés, l’interface utilisateur React est accessible ici :
+   Une fois les services démarrés, l’interface utilisateur React est accessible ici :  
    👉 [http://localhost:3000](http://localhost:3000)
 
 ---
