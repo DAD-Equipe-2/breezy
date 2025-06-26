@@ -110,10 +110,6 @@ export default function EditProfilePage() {
             src={profilePictureUrl || "/profil_picture.jpg"}
             alt="Profile"
             className="w-28 h-28 rounded-full object-cover"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "/profil_picture.jpg";
-            }}
           />
         <input
           type="file"

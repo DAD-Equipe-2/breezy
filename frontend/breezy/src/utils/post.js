@@ -32,12 +32,8 @@ export async function getFeed() {
     const response = await api.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/feed`, {
       withCredentials: true
     });
-    return response.data;
-   } catch (error) {
-    if (api.isAxiosError(error) && error.response?.status === 404) {
-      console.debug("Pas de posts trouvés (404).");
-      return { posts: [] };
-    }
+      return response.data;
+  } catch (error) {
     console.error("Erreur en récupérant le feed :", error);
     throw error;
   }
@@ -79,9 +75,6 @@ export async function getComments(postId) {
     });
     return response.data;
   } catch (error) {
-    if (api.isAxiosError(error) && error.response?.status === 404) {
-      return [];
-    }
     console.error('Error fetching comments:', error);
   }
 }

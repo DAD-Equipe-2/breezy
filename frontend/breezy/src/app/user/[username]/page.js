@@ -103,10 +103,6 @@ export default function UserProfile({ params }) {
               src={getUserProfilePictureUrl(user.username)}
               alt="Profile Picture"
               className="w-24 h-24 rounded-full mb-4"
-              onError={(e) => {
-                e.target.onerror = null; // empêche boucle infinie si l’image par défaut échoue aussi
-                e.target.src = "/profil_picture.jpg"; // chemin vers ton avatar par défaut dans /public
-              }}
             />
             <p className="text-2xl font-bold">{user.nickname}</p>
             <p className="text-l font-italic">@{user.username}</p>
