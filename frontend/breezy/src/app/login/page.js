@@ -34,7 +34,7 @@ export default function Login() {
       router.push("/home");
     } catch (err) {
       console.error(err);
-      setError("Invalid identifiers.");
+      setError("Invalid credentials.");
     } finally {
       setLoading(false);
     }
