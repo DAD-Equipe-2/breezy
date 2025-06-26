@@ -106,35 +106,28 @@ services:
       - post-mongo-data:/data/db
     networks:
       - app-network
+  
+  # -- NextJS APP --
+  nextjs-app:
+    build:
+      context: ./frontend/breezy
+      dockerfile: Dockerfile
+    restart: always
+    container_name: breezy-nextjs-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8080/api/v1
+    depends_on:
+      - gateway
+    # networks:
+    #   - app-network
 
-  # -- MESSAGE SERVICE --
-  # message-service:
-  #   build:
-  #     context: ./backend/message
-  #     dockerfile: Dockerfile
-  #   restart: always
-  #   container_name: breezy-message-service
-  #   environment:
-  #     - MONGO_URI=mongodb://message-mongo:27017/message
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     - message-mongo
-
-  # message-mongo:
-  #   image: mongo:latest
-  #   restart: always
-  #   container_name: breezy-message-mongo
-  #   volumes:
-  #     - message-mongo-data:/data/db
-  #   networks:
-  #     - app-network
 
 volumes:
   auth-mongo-data:
   user-mongo-data:
   post-mongo-data:
-  # message-mongo-data:
 
 networks:
   app-network:
