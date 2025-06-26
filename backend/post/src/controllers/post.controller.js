@@ -2,7 +2,7 @@ const Post = require('../models/post.model');
 
 const axios = require('axios');
 const USER_SERVICE = 'http://user-service:3000';
-
+const POSTS_LIMIT = 50;     // Default limit for posts
 
 
 exports.createPost = async (req, res) => {
@@ -109,7 +109,7 @@ exports.getPostsByUser = async (req, res) => {
         const posts = await Post.find({ author: username, parent: null })
             .sort({ createdAt: -1 })
             .skip(skip)
-            .limit(10)
+            .limit(POSTS_LIMIT)
             .lean();
 
         if (posts.length === 0) return res.status(404).json({ message: 'No posts found for this user' });
@@ -136,7 +136,7 @@ exports.getFeed = async (req, res) => {
         const feed = await Post.find({ author: { $in: followings }, parent: null })
             .sort({ createdAt: -1 })
             .skip(skip)
-            .limit(10)
+            .limit(POSTS_LIMIT)
             .lean();
         
         if (feed.length === 0) return res.status(404).json({ message: 'No posts found in the feed' });
@@ -169,7 +169,7 @@ exports.getComments = async (req, res) => {
         const comments = await Post.find({ parent: postId })
             .sort({ createdAt: -1 })
             .skip(skip)
-            .limit(10)
+            .limit(POSTS_LIMIT)
             .lean();
         
         if (comments.length === 0) return res.status(404).json({ message: 'No comments found' });
