@@ -2,9 +2,9 @@
 import { useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
-import SearchBar from '@/components/SearchBar';
-import Return from '@/components/Return';
-import Footer from '@/components/Footer';
+import SearchBar from '@/components/searchBar';
+import Return from '@/components/return';
+import Footer from '@/components/footer';
 import { searchUsers } from '@/utils/user'; // adapte le chemin
 
 export default function Search() {
@@ -77,10 +77,10 @@ export default function Search() {
                                 {/* Infos */}
                                 <div>
                                     <p className="font-bold text-lg text-[var(--color-foreground)]">
-                                        @{user.username}
+                                        {user.username}
                                     </p>
                                     <p className="text-sm text-[var(--color-secondary)]">
-                                        {user.nickname || 'Pas de pseudo'}
+                                        @{user.nickname || 'Pas de pseudo'}
                                     </p>
                                 </div>
                             </div>

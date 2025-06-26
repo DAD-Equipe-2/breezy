@@ -73,3 +73,59 @@ export async function unlikePost(postId) {
     throw error;
   }
 }
+
+export async function getComments(postId) {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/comments`, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      console.log("Pas de commentaires trouvés (404).");
+      return [];
+    }
+    console.error('Error fetching comments:', error);
+    throw error;
+  }
+}
+
+export async function getPost(id) {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${id}`, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    throw error;
+  }
+}
+
+//Add a comment to a post
+export async function addComment(postId, content) {
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}/comments`, { content }, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    throw error;
+  }
+}
+
+//Update a post
+export async function updatePost(postId, content) {
+  try {
+    const response = await axios.patch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts/${postId}`,
+      { content },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating post:", error);
+    throw error;
+  }
+}

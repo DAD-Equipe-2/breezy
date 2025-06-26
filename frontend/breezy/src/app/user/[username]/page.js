@@ -97,7 +97,7 @@ export default function UserProfile({ params }) {
   }
 
   return (
-    <div className="pb-20 min-h-screen max-w-[100vw]">
+    <div className="pb-20 min-h-screen min-w-screen md:px-32 max-w-[100vw]">
       <div className="flex h-[15vh] items-center bg-[#1F1F1F] p-4">
         <BackButton/>
       </div>
@@ -113,8 +113,8 @@ export default function UserProfile({ params }) {
                 e.target.src = "/profil_picture.jpg"; // chemin vers ton avatar par défaut dans /public
               }}
             />
-            <p className="text-2xl font-bold">{user.username}</p>
-            <p className="text-l font-italic">@{user.nickname}</p>
+            <p className="text-2xl font-bold">{user.nickname}</p>
+            <p className="text-l font-italic">@{user.username}</p>
             <br></br>
             <p className="text-sm text-foreground text-opacity-70 w-full w-full break-words leading-relaxed ">{user.bio ? user.bio : "No bio provided"}</p>
             <div className="flex">
@@ -131,12 +131,12 @@ export default function UserProfile({ params }) {
           
           {currentUser === user.username ? (
           <Link href="/settings">
-            <Button text="Edit profile" textFondSize="text-sm" paddingX="px-4" />
+            <Button text="Edit&nbsp;profile" textFondSize="text-sm" paddingX="px-4" />
           </Link>
         ) : (
           <div className="flex space-x-2 mr-1 items-center">
-            <Link href={`/message/${user.username}`}>
               <Button
+                action={() => alert("Coming soon... ")}
                 icon={<LuMailPlus className="w-4 h-4" />}
                 textFondSize="text-sm"
                 paddingX="px-3"
@@ -144,7 +144,6 @@ export default function UserProfile({ params }) {
                 textcolor="text-foreground"
                 bordercolor="border-primary"
               />
-            </Link>
             <Button
               text={isFollowingUser ? "Unfollow" : "Follow"}
               textFondSize="text-sm"
@@ -178,7 +177,7 @@ export default function UserProfile({ params }) {
                   })}
                   content={post.content}
                   likes={post.likes}
-                  comments={post.comments.length}
+                  comments={post.comments}
                 />
               ))
             ) : (
@@ -203,7 +202,7 @@ export default function UserProfile({ params }) {
       </div>  
       <div className="flex flex-col fixed bottom-0 inset-x-0 z-20 bg-background w-full">
           <Footer />
-      </div>  
+      </div>
       </div>
     </div>
   );
