@@ -112,15 +112,15 @@ exports.getPostsByUser = async (req, res) => {
             .limit(POSTS_LIMIT)
             .lean();
 
-        if (posts.length === 0) return res.status(404).json({ message: 'No posts found for this user' });
+        if (posts.length === 0) return res.status(200).json({ posts: [] });
 
         // Get author details from user service
         const authorDetails = await getAuthorDetails([username]);
         if (authorDetails.length === 0) {
-            return res.status(200).json({ posts, author: null });
+            return res.status(200).json({ posts: posts, author: null });
         }
 
-        return res.status(200).json({ posts, author: authorDetails[0] });
+        return res.status(200).json({ posts: posts, author: authorDetails[0] });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -138,13 +138,13 @@ exports.getFeed = async (req, res) => {
             .skip(skip)
             .limit(POSTS_LIMIT)
             .lean();
-        
-        if (feed.length === 0) return res.status(404).json({ message: 'No posts found in the feed' });
-        
+
+        if (feed.length === 0) return res.status(200).json({ posts: [] });
+
         // Get author details for each post in the feed
         const authorDetails = await getAuthorDetails(feed.map(post => post.author));
         if (authorDetails.length === 0) {
-            return res.status(200).json(feed);
+            return res.status(200).json({ posts: feed });
         }
 
         // Set author details for each post in the feed
@@ -154,7 +154,7 @@ exports.getFeed = async (req, res) => {
                 post.author = author;
             }
         });
-        return res.status(200).json(feed);
+        return res.status(200).json({ posts: feed });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -171,13 +171,13 @@ exports.getComments = async (req, res) => {
             .skip(skip)
             .limit(POSTS_LIMIT)
             .lean();
-        
-        if (comments.length === 0) return res.status(404).json({ message: 'No comments found' });
+
+        if (comments.length === 0) return res.status(200).json({ comments: [] });
 
         // Get author details for each comment
         const authorDetails = await getAuthorDetails(comments.map(comment => comment.author));
         if (authorDetails.length === 0) {
-            return res.status(200).json(comments);
+            return res.status(200).json({ comments: comments });
         }
 
         // Set author details for each comment
@@ -187,7 +187,7 @@ exports.getComments = async (req, res) => {
                 comment.author = author;
             }
         });
-        return res.status(200).json(comments);
+        return res.status(200).json({ comments: comments });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
