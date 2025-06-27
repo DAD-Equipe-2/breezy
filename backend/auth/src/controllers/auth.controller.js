@@ -43,6 +43,44 @@ exports.register = async (req, res) => {
 };
 
 
+async function generateTokens(user) {
+    // Create a JWT token payload
+    const payload = {
+        username: user.username,
+        role: user.role
+    };
+    
+    // Sign the JWT token with the secret key and set an expiration time
+    const accessToken  = jwt.sign(payload, process.env.ACCESS_JWT_KEY,  { expiresIn: '1h' });
+    const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_KEY, { expiresIn: '7d' });
+
+    const oneHourMs      = 60 * 60 * 1000;              // 1 hour in ms
+    const sevenDaysMs    = 7 * 24 * 60 * 60 * 1000;     // 7 days in ms
+
+    return { accessToken, accessToken_expiresIn: oneHourMs, refreshToken, refreshToken_expiresIn: sevenDaysMs };
+}
+
+async function saveRefreshToken(user, refreshToken) {
+    // Save the refresh token in the user document (optional, for revocation purposes)
+    user.refresh_token = refreshToken;
+    await user.save();
+}
+
+async function setTokenCookies(res, accessToken, refreshToken, accessToken_expiresIn, refreshToken_expiresIn) {
+    res.cookie('accessToken', accessToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: accessToken_expiresIn,
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: refreshToken_expiresIn,
+    });
+}
+
+
 exports.login = async (req, res) => {
     const { username, password } = req.body;
 
@@ -53,40 +91,19 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Create a JWT token payload
-        const payload = {
-            username: user.username,
-            role: user.role
-        };
-        
-        // Sign the JWT token with the secret key and set an expiration time
-        const accessToken  = jwt.sign(payload, process.env.ACCESS_JWT_KEY,  { expiresIn: '1h' });
-        const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_KEY, { expiresIn: '7d' });
-
-        const oneHourMs      = 60 * 60 * 1000;              // 1 hour in ms
-        const sevenDaysMs    = 7 * 24 * 60 * 60 * 1000;     // 7 days in ms
+        // Generate access and refresh tokens
+        const { accessToken, refreshToken, accessToken_expiresIn, refreshToken_expiresIn } = await generateTokens(user);
 
         // Save the refresh token in the database (optional, for revocation purposes)
-        user.refresh_token = refreshToken;
-        await user.save();
+        await saveRefreshToken(user, refreshToken);
 
         // Set the token in a cookie with httpOnly and secure flags
-        res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            secure: true,
-            maxAge: oneHourMs,
-        });
-
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: true,
-            maxAge: sevenDaysMs,
-        });
+        setTokenCookies(res, accessToken, refreshToken, accessToken_expiresIn, refreshToken_expiresIn);
 
         return res.status(200).json({
             message: 'Login successful',
-            accessToken_expiresIn: oneHourMs,
-            refreshToken_expiresIn: sevenDaysMs,
+            accessToken_expiresIn: accessToken_expiresIn,
+            refreshToken_expiresIn: refreshToken_expiresIn,
         });
     }
     catch (error) {
@@ -109,26 +126,18 @@ exports.renewToken = async (req, res) => {
         const user = await User.findOne({ username: req.user.username });
         if (!user || user.refresh_token !== req.token) return res.status(403).json({ message: 'Invalid or expired refresh token' });
         
-        // Create a new JWT token payload
-        const payload = {
-            username: req.user.username,
-            role: req.user.role
-        };
-        
-        // Sign a new access token with the secret key
-        const newAccessToken = jwt.sign(payload, process.env.ACCESS_JWT_KEY, { expiresIn: '1h' });
-        const oneHourMs      = 60 * 60 * 1000;      // 1 hour in milliseconds
+        // Generate access and refresh tokens
+        const { accessToken, refreshToken, accessToken_expiresIn, refreshToken_expiresIn } = await generateTokens(user);
 
-        // Set the new token in a cookie with httpOnly and secure flags
-        res.cookie('accessToken', newAccessToken, {
-            httpOnly: true,
-            secure: true,
-            maxAge: oneHourMs,
-        });
+        // Save the refresh token in the database (optional, for revocation purposes)
+        await saveRefreshToken(user, refreshToken);
+
+        // Set the token in a cookie with httpOnly and secure flags
+        setTokenCookies(res, accessToken, refreshToken, accessToken_expiresIn, refreshToken_expiresIn);
 
         return res.status(200).json({
             message: 'Access token renewed',
-            accessToken_expiresIn: oneHourMs
+            accessToken_expiresIn: accessToken_expiresIn
         });
     }
     catch (error) {
