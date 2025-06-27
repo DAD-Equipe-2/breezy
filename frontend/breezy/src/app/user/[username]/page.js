@@ -104,7 +104,7 @@ export default function UserProfile({ params }) {
               alt="Profile Picture"
               className="w-24 h-24 rounded-full mb-4"
             />
-            <p className="text-2xl font-bold">{user.nickname}</p>
+            <p className="text-2xl font-bold">{user.nickname.length > 15 ? `${user.nickname.slice(0, 15)}…` : user.nickname}</p>
             <p className="text-l font-italic">@{user.username}</p>
             <br></br>
             <p className="text-sm text-foreground text-opacity-70 w-full w-full break-words leading-relaxed ">{user.bio ? user.bio : "No bio provided"}</p>
