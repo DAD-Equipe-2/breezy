@@ -65,13 +65,13 @@ export default function EditPost ({ }) {
             <Return />
             <div className="flex items-center gap-3">
             {/* Bouton image */}
-            <button
+            {/* <button
                 onClick={() => alert("Coming soon !")}
                 aria-label="Importer une image"
                 className="text-primary hover:cursor-pointer"
             >
                 <FaImage className="w-8 h-8" />
-            </button>
+            </button> */}
     
             {/* Bouton Tweet */}
             <Button
