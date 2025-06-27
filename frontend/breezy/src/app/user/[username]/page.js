@@ -107,7 +107,7 @@ export default function UserProfile({ params }) {
             <p className="text-2xl font-bold">{user.nickname.length > 15 ? `${user.nickname.slice(0, 15)}…` : user.nickname}</p>
             <p className="text-l font-italic">@{user.username}</p>
             <br></br>
-            <p className="text-sm text-foreground text-opacity-70 w-full w-full break-words leading-relaxed ">{user.bio ? user.bio : "No bio provided"}</p>
+            <p className="text-sm text-foreground text-opacity-70 w-full w-full break-words leading-relaxed mb-2">{user.bio ? user.bio : "No bio provided"}</p>
             <div className="flex">
               <FaCalendar className="text-200 mr-2" />
               <p className="text-sm text-foreground text-opacity-30">
