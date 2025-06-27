@@ -16,7 +16,6 @@ services:
       - auth-service
       - user-service
       - post-service
-      # - message-service
   
   # -- DOCUMENTATION SERVICE --
   documentation-service:
