@@ -1,3 +1,7 @@
+x-env: &global-env
+  FRONTEND_ORIGIN: http://localhost:3000
+
+
 services:
   
   gateway:
@@ -16,7 +20,6 @@ services:
       - auth-service
       - user-service
       - post-service
-      # - message-service
   
   # -- DOCUMENTATION SERVICE --
   documentation-service:
@@ -25,6 +28,7 @@ services:
       dockerfile: Dockerfile.dev
     restart: always
     container_name: breezy-documentation-service
+    environment: *global-env
     volumes:
       - ./backend/docs:/app         # Mount local source code into container (remove for production)
       - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
@@ -38,6 +42,7 @@ services:
       dockerfile: Dockerfile.dev
     restart: always
     container_name: breezy-gateway-service
+    environment: *global-env
     volumes:
       - ./backend/gateway:/app         # Mount local source code into container (remove for production)
       - /app/node_modules               # Prevent overwriting node_modules from host (remove for production)
@@ -52,7 +57,8 @@ services:
     restart: always
     container_name: breezy-auth-service
     environment:
-      - MONGO_URI=mongodb://auth-mongo:27017/auth
+      <<: *global-env
+      MONGO_URI: mongodb://auth-mongo:27017/auth
     volumes:
       - ./backend/auth:/app         # Mount local source code into container (remove for production)
       - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
@@ -78,7 +84,8 @@ services:
     restart: always
     container_name: breezy-user-service
     environment:
-      - MONGO_URI=mongodb://user-mongo:27017/user
+      <<: *global-env
+      MONGO_URI: mongodb://user-mongo:27017/user
     volumes:
       - ./backend/user:/app         # Mount local source code into container (remove for production)
       - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
@@ -104,7 +111,8 @@ services:
     restart: always
     container_name: breezy-post-service
     environment:
-      - MONGO_URI=mongodb://post-mongo:27017/post
+      <<: *global-env
+      MONGO_URI: mongodb://post-mongo:27017/post
     volumes:
       - ./backend/post:/app         # Mount local source code into container (remove for production)
       - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
@@ -122,37 +130,10 @@ services:
     networks:
       - app-network
 
-  # -- MESSAGE SERVICE --
-  # message-service:
-  #   build:
-  #     context: ./backend/message
-  #     dockerfile: Dockerfile.dev
-  #   restart: always
-  #   container_name: breezy-message-service
-  #   environment:
-  #     - MONGO_URI=mongodb://message-mongo:27017/message
-  #   volumes:
-  #     - ./backend/message:/app         # Mount local source code into container (remove for production)
-  #     - /app/node_modules           # Prevent overwriting node_modules from host (remove for production)
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     - message-mongo
-
-  # message-mongo:
-  #   image: mongo:latest
-  #   restart: always
-  #   container_name: breezy-message-mongo
-  #   volumes:
-  #     - message-mongo-data:/data/db
-  #   networks:
-  #     - app-network
-
 volumes:
   auth-mongo-data:
   user-mongo-data:
   post-mongo-data:
-  # message-mongo-data:
 
 networks:
   app-network:

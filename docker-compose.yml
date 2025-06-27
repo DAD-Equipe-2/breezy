@@ -1,3 +1,7 @@
+x-env: &global-env
+  FRONTEND_ORIGIN: http://localhost:3000
+
+
 services:
   
   gateway:
@@ -24,6 +28,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     container_name: breezy-documentation-service
+    environment: *global-env
     networks:
       - app-network
   
@@ -34,6 +39,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     container_name: breezy-gateway-service
+    environment: *global-env
     networks:
       - app-network
 
@@ -45,7 +51,8 @@ services:
     restart: always
     container_name: breezy-auth-service
     environment:
-      - MONGO_URI=mongodb://auth-mongo:27017/auth
+      <<: *global-env
+      MONGO_URI: mongodb://auth-mongo:27017/auth
     networks:
       - app-network
     depends_on:
@@ -68,7 +75,8 @@ services:
     restart: always
     container_name: breezy-user-service
     environment:
-      - MONGO_URI=mongodb://user-mongo:27017/user
+      <<: *global-env
+      MONGO_URI: mongodb://user-mongo:27017/user
     networks:
       - app-network
     depends_on:
@@ -91,7 +99,8 @@ services:
     restart: always
     container_name: breezy-post-service
     environment:
-      - MONGO_URI=mongodb://post-mongo:27017/post
+      <<: *global-env
+      MONGO_URI: mongodb://post-mongo:27017/post
     networks:
       - app-network
     depends_on:
