@@ -8,7 +8,7 @@ services:
   gateway:
     build:
       context: ./backend/nginx
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     restart: always
     container_name: breezy-gateway
     ports:
