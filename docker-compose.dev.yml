@@ -1,17 +1,20 @@
 x-env: &global-env
-  FRONTEND_ORIGIN: http://localhost:3000
-
+  FRONTEND_ORIGIN: http://localhost:3000    # Frontend URL
+  GATEWAY_ORIGIN:  http://localhost:8080    # API Gateway URL
 
 services:
   
+  # -- NGINX GATEWAY --
   gateway:
-    image: nginx:alpine
+    build:
+      context: ./backend/nginx
+      dockerfile: Dockerfile
     restart: always
-    container_name: breezy-api-gateway
+    container_name: breezy-gateway
     ports:
+      - "443:443"
+      - "80:80"
       - "8080:8080"
-    volumes:
-      - ./backend/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - app-network
     depends_on:
