@@ -86,7 +86,7 @@ export default function HomePage() {
           ))
         ) : (
           <div className="flex justify-center items-center h-full">
-            <p className="text-sm text-muted mt-4">No post available. Start to follow users to see their posts on your feed page!</p>
+            <p className="text-sm text-muted mt-4 ml-2 mr-2">No post available. Start to follow users to see their posts on your feed page!</p>
           </div>
         )}
 

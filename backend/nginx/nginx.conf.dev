@@ -3,6 +3,7 @@ events {
 }
 
 http {
+    
     server {
         listen 8080;
         server_name localhost;
@@ -10,7 +11,7 @@ http {
         root /usr/share/nginx/html;
 
         # --- DOCUMENTATION ---
-        location /docs/ {
+        location /api/docs/ {
             proxy_pass http://documentation-service:3000/;
         }
 
@@ -138,5 +139,6 @@ http {
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
+
     }
 }

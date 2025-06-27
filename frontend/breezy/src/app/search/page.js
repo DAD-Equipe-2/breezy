@@ -66,10 +66,10 @@ export default function Search() {
                                 {/* Infos */}
                                 <div>
                                     <p className="font-bold text-lg text-[var(--color-foreground)]">
-                                        {user.username}
+                                        {user.nickname || 'Utilisateur Breezy'}
                                     </p>
                                     <p className="text-sm text-[var(--color-secondary)]">
-                                        @{user.nickname || 'Pas de pseudo'}
+                                        @{user.username}
                                     </p>
                                 </div>
                             </div>
