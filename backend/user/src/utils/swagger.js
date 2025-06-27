@@ -10,7 +10,7 @@ const swaggerDefinition = {
     },
     servers: [
         {
-            url: 'http://localhost:8080/api/v1/users',
+            url: `${process.env.GATEWAY_ORIGIN || 'http://localhost:8080'}/api/v1/users`,
         },
     ],
 };

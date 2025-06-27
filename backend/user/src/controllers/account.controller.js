@@ -1,6 +1,6 @@
 const User = require('../models/user.model');
 
-const SERVICE_URL = 'http://localhost:8080/api/v1/users';
+const SERVICE_URL = `${process.env.GATEWAY_ORIGIN || "http://localhost:8080"}/api/v1/users`;
 
 
 exports.createUser = async (req, res) => {

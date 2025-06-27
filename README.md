@@ -113,11 +113,11 @@ L'application repose sur une **architecture microservices**. Chaque service est 
 
 3. **Tester l’API**  
    La documentation Swagger est disponible à cette adresse :  
-   👉 [http://localhost:8080/docs](http://localhost:8080/docs)
+   👉 [https://localhost/api/docs](https://localhost/api/docs)
 
 4. **Accéder au frontend**  
    Une fois les services démarrés, l’interface utilisateur React est accessible ici :  
-   👉 [http://localhost:3000](http://localhost:3000)
+   👉 [https://localhost](https://localhost)
 
 ---
 
